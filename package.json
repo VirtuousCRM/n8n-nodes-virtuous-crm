@@ -1,5 +1,5 @@
 {
-  "name": "n8n-nodes-<...>",
+  "name": "n8n-nodes-virtuous",
   "version": "0.1.0",
   "description": "",
   "keywords": [
@@ -8,8 +8,8 @@
   "license": "MIT",
   "homepage": "",
   "author": {
-    "name": "",
-    "email": ""
+    "name": "developer",
+    "email": "developer@virtuous.org"
   },
   "repository": {
     "type": "git",
@@ -30,17 +30,20 @@
   "files": [
     "dist"
   ],
-  "n8n": {
-    "n8nNodesApiVersion": 1,
-    "credentials": [
-      "dist/credentials/ExampleCredentialsApi.credentials.js",
-      "dist/credentials/HttpBinApi.credentials.js"
-    ],
-    "nodes": [
-      "dist/nodes/ExampleNode/ExampleNode.node.js",
-      "dist/nodes/HttpBin/HttpBin.node.js"
-    ]
-  },
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"credentials": [
+			"dist/credentials/ExampleCredentialsApi.credentials.js",
+			"dist/credentials/HttpBinApi.credentials.js",
+			"dist/credentials/VirtuousApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/ExampleNode/ExampleNode.node.js",
+			"dist/nodes/HttpBin/HttpBin.node.js",
+			"dist/nodes/VirtuousContactNode/VirtuousContactNode.node.js",
+			"dist/nodes/VirtuousGiftNode/VirtuousGiftNode.node.js"
+		]
+	},
   "devDependencies": {
     "@typescript-eslint/parser": "~8.32.0",
     "eslint": "^8.57.0",

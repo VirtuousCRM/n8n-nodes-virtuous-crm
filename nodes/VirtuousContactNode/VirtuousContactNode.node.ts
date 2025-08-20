@@ -11,7 +11,7 @@ export class VirtuousContactNode implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Virtuous Contact',
 		name: 'virtuousContactNode',
-		icon: 'fa:address-book',
+		icon: 'file:virtuous-logo-mark.svg',
 		group: ['input'],
 		version: 1,
 		description: 'Get contact information from Virtuous CRM',
@@ -34,16 +34,22 @@ export class VirtuousContactNode implements INodeType {
 				noDataExpression: true,
 				options: [
 					{
-						name: 'Get Contact by ID',
-						value: 'getById',
-						description: 'Get a specific contact by their ID',
-						action: 'Get a contact by ID',
+						name: 'Create Contact',
+						value: 'create',
+						description: 'Create a new contact',
+						action: 'Create a new contact',
 					},
 					{
 						name: 'Get Contact by Email',
 						value: 'getByEmail',
 						description: 'Get a contact by their email address',
 						action: 'Get a contact by email',
+					},
+					{
+						name: 'Get Contact by ID',
+						value: 'getById',
+						description: 'Get a specific contact by their ID',
+						action: 'Get a contact by ID',
 					},
 					{
 						name: 'Search Contacts',
@@ -102,6 +108,558 @@ export class VirtuousContactNode implements INodeType {
 				default: '',
 				placeholder: 'contact@example.com',
 				description: 'The email address of the contact to retrieve',
+			},
+			// Create Contact Fields
+			{
+				displayName: 'Contact Data',
+				name: 'createContactData',
+				type: 'collection',
+				displayOptions: {
+					show: {
+						operation: ['create'],
+					},
+				},
+				default: {},
+				placeholder: 'Add Contact Field',
+				description: 'Contact fields for the new contact',
+				options: [
+					{
+						displayName: 'Anniversary Day',
+						name: 'anniversaryDay',
+						type: 'number',
+						typeOptions: {
+							minValue: 1,
+							maxValue: 31,
+						},
+						default: 0,
+						description: 'Anniversary day (1-31)',
+					},
+					{
+						displayName: 'Anniversary Month',
+						name: 'anniversaryMonth',
+						type: 'number',
+						typeOptions: {
+							minValue: 1,
+							maxValue: 12,
+						},
+						default: 0,
+						description: 'Anniversary month (1-12)',
+					},
+					{
+						displayName: 'Anniversary Year',
+						name: 'anniversaryYear',
+						type: 'number',
+						default: 0,
+					},
+					{
+						displayName: 'Contact Type',
+						name: 'contactType',
+						type: 'options',
+						options: [
+							{ name: 'Household', value: 'Household' },
+							{ name: 'Organization', value: 'Organization' },
+							{ name: 'Foundation', value: 'Foundation' },
+						],
+						default: 'Household',
+						description: 'Type of contact',
+					},
+					{
+						displayName: 'Description',
+						name: 'description',
+						type: 'string',
+						typeOptions: {
+							alwaysOpenEditWindow: true,
+							rows: 4,
+						},
+						default: '',
+						description: 'Description of the contact',
+					},
+					{
+						displayName: 'Informal Name',
+						name: 'informalName',
+						type: 'string',
+						default: '',
+						description: 'Informal name of the contact',
+					},
+					{
+						displayName: 'Is Archived',
+						name: 'isArchived',
+						type: 'boolean',
+						default: false,
+						description: 'Whether the contact is archived',
+					},
+					{
+						displayName: 'Is Private',
+						name: 'isPrivate',
+						type: 'boolean',
+						default: false,
+						description: 'Whether the contact is marked as private',
+					},
+					{
+						displayName: 'Marital Status',
+						name: 'maritalStatus',
+						type: 'options',
+						options: [
+							{ name: 'Divorced', value: 'Divorced' },
+							{ name: 'Married', value: 'Married' },
+							{ name: 'Other', value: 'Other' },
+							{ name: 'Single', value: 'Single' },
+							{ name: 'Widowed', value: 'Widowed' },
+						],
+						default: 'Single',
+						description: 'Marital status of the contact',
+					},
+					{
+						displayName: 'Name',
+						name: 'name',
+						type: 'string',
+						default: '',
+						description: 'Name of the contact',
+					},
+					{
+						displayName: 'Origin Segment ID',
+						name: 'originSegmentId',
+						type: 'number',
+						default: 0,
+						description: 'ID of the origin segment',
+					},
+					{
+						displayName: 'Reference ID',
+						name: 'referenceId',
+						type: 'string',
+						default: '',
+						description: 'External reference ID',
+					},
+					{
+						displayName: 'Reference Source',
+						name: 'referenceSource',
+						type: 'string',
+						default: '',
+						description: 'External reference source',
+					},
+					{
+						displayName: 'Website',
+						name: 'website',
+						type: 'string',
+						default: '',
+						placeholder: 'https://example.com',
+						description: 'Website URL of the contact',
+					},
+				],
+			},
+			// Contact Addresses for Create
+			{
+				displayName: 'Contact Addresses',
+				name: 'contactAddresses',
+				type: 'fixedCollection',
+				typeOptions: {
+					multipleValues: true,
+				},
+				displayOptions: {
+					show: {
+						operation: ['create'],
+					},
+				},
+				default: {},
+				description: 'Addresses for the contact',
+				options: [
+					{
+						displayName: 'Address',
+						name: 'address',
+						values: [
+							{
+								displayName: 'Address 1',
+								name: 'address1',
+								type: 'string',
+								default: '',
+								description: 'Street address line 1',
+							},
+							{
+								displayName: 'Address 2',
+								name: 'address2',
+								type: 'string',
+								default: '',
+								description: 'Street address line 2',
+							},
+							{
+								displayName: 'City',
+								name: 'city',
+								type: 'string',
+								default: '',
+							},
+							{
+								displayName: 'Country Code',
+								name: 'countryCode',
+								type: 'string',
+								default: 'US',
+								description: 'Country code (e.g., US, CA)',
+							},
+							{
+								displayName: 'Is Primary',
+								name: 'isPrimary',
+								type: 'boolean',
+								default: false,
+								description: 'Whether this is the primary address',
+							},
+							{
+								displayName: 'Label',
+								name: 'label',
+								type: 'string',
+								default: '',
+								description: 'Address label (e.g., Home, Work)',
+							},
+							{
+								displayName: 'Latitude',
+								name: 'latitude',
+								type: 'number',
+								typeOptions: {
+									numberPrecision: 6,
+								},
+								default: 0,
+								description: 'Latitude coordinate',
+							},
+							{
+								displayName: 'Longitude',
+								name: 'longitude',
+								type: 'number',
+								typeOptions: {
+									numberPrecision: 6,
+								},
+								default: 0,
+								description: 'Longitude coordinate',
+							},
+							{
+								displayName: 'Postal Code',
+								name: 'postal',
+								type: 'string',
+								default: '',
+								description: 'Postal/ZIP code',
+							},
+							{
+								displayName: 'State Code',
+								name: 'stateCode',
+								type: 'string',
+								default: '',
+								description: 'State/Province code (e.g., CA, NY)',
+							},
+						],
+					},
+				],
+			},
+			// Contact Individuals for Create
+			{
+				displayName: 'Contact Individuals',
+				name: 'contactIndividuals',
+				type: 'fixedCollection',
+				typeOptions: {
+					multipleValues: true,
+				},
+				displayOptions: {
+					show: {
+						operation: ['create'],
+					},
+				},
+				default: {},
+				description: 'Individual persons associated with this contact',
+				options: [
+					{
+						displayName: 'Individual',
+						name: 'individual',
+						values: [
+							{
+								displayName: 'Approximate Age',
+								name: 'approximateAge',
+								type: 'number',
+								typeOptions: {
+									minValue: 0,
+									maxValue: 150,
+								},
+								default: 0,
+								description: 'Approximate age if exact birth date is unknown',
+							},
+							{
+								displayName: 'Birth Day',
+								name: 'birthDay',
+								type: 'number',
+								typeOptions: {
+									minValue: 1,
+									maxValue: 31,
+								},
+								default: 0,
+								description: 'Birth day (1-31)',
+							},
+							{
+								displayName: 'Birth Month',
+								name: 'birthMonth',
+								type: 'number',
+								typeOptions: {
+									minValue: 1,
+									maxValue: 12,
+								},
+								default: 0,
+								description: 'Birth month (1-12)',
+							},
+							{
+								displayName: 'Birth Year',
+								name: 'birthYear',
+								type: 'number',
+								default: 0,
+							},
+							{
+								displayName: 'First Name',
+								name: 'firstName',
+								type: 'string',
+								default: '',
+								description: 'First name of the individual',
+							},
+							{
+								displayName: 'Gender',
+								name: 'gender',
+								type: 'options',
+								options: [
+									{ name: 'Female', value: 'Female' },
+									{ name: 'Male', value: 'Male' },
+									{ name: 'Other', value: 'Other' },
+								],
+								default: 'Other',
+								description: 'Gender of the individual',
+							},
+							{
+								displayName: 'Is Deceased',
+								name: 'isDeceased',
+								type: 'boolean',
+								default: false,
+								description: 'Whether the individual is deceased',
+							},
+							{
+								displayName: 'Is Primary',
+								name: 'isPrimary',
+								type: 'boolean',
+								default: false,
+								description: 'Whether this is the primary individual',
+							},
+							{
+								displayName: 'Is Secondary',
+								name: 'isSecondary',
+								type: 'boolean',
+								default: false,
+								description: 'Whether this is a secondary individual',
+							},
+							{
+								displayName: 'Last Name',
+								name: 'lastName',
+								type: 'string',
+								default: '',
+								description: 'Last name of the individual',
+							},
+							{
+								displayName: 'Middle Name',
+								name: 'middleName',
+								type: 'string',
+								default: '',
+								description: 'Middle name of the individual',
+							},
+							{
+								displayName: 'Passion',
+								name: 'passion',
+								type: 'string',
+								default: '',
+								description: 'Individual\'s passion or interests',
+							},
+							{
+								displayName: 'Prefix',
+								name: 'prefix',
+								type: 'string',
+								default: '',
+								description: 'Name prefix (e.g., Mr., Mrs., Dr.)',
+							},
+							{
+								displayName: 'Suffix',
+								name: 'suffix',
+								type: 'string',
+								default: '',
+								description: 'Name suffix (e.g., Jr., Sr., III)',
+							},
+						],
+					},
+				],
+			},
+			// Contact Methods for Individuals in Create
+			{
+				displayName: 'Contact Methods',
+				name: 'contactMethods',
+				type: 'fixedCollection',
+				typeOptions: {
+					multipleValues: true,
+				},
+				displayOptions: {
+					show: {
+						operation: ['create'],
+					},
+				},
+				default: {},
+				description: 'Contact methods (email, phone, etc.) for individuals',
+				options: [
+					{
+						displayName: 'Contact Method',
+						name: 'method',
+						values: [
+							{
+								displayName: 'Individual Index',
+								name: 'individualIndex',
+								type: 'number',
+								typeOptions: {
+									minValue: 0,
+								},
+								default: 0,
+								description: 'Index of the individual this contact method belongs to (0 for first individual, 1 for second, etc.)',
+							},
+							{
+								displayName: 'Is Opted In',
+								name: 'isOptedIn',
+								type: 'boolean',
+								default: true,
+								description: 'Whether the contact has opted in for this method',
+							},
+							{
+								displayName: 'Is Primary',
+								name: 'isPrimary',
+								type: 'boolean',
+								default: false,
+								description: 'Whether this is the primary contact method',
+							},
+							{
+								displayName: 'Type',
+								name: 'type',
+								type: 'options',
+								options: [
+									{ name: 'Email', value: 'Email' },
+									{ name: 'Fax', value: 'Fax' },
+									{ name: 'Mobile', value: 'Mobile' },
+									{ name: 'Other', value: 'Other' },
+									{ name: 'Phone', value: 'Phone' },
+								],
+								default: 'Email',
+								description: 'Type of contact method',
+							},
+							{
+								displayName: 'Value',
+								name: 'value',
+								type: 'string',
+								default: '',
+								description: 'The contact method value (email address, phone number, etc.)',
+							},
+						],
+					},
+				],
+			},
+			// Custom Collections for Create
+			{
+				displayName: 'Custom Collections',
+				name: 'createCustomCollections',
+				type: 'fixedCollection',
+				typeOptions: {
+					multipleValues: true,
+				},
+				displayOptions: {
+					show: {
+						operation: ['create'],
+					},
+				},
+				default: {},
+				description: 'Custom collections for the contact',
+				options: [
+					{
+						displayName: 'Collection',
+						name: 'collection',
+						values: [
+							{
+								displayName: 'Name',
+								name: 'name',
+								type: 'string',
+								default: '',
+								description: 'Collection name',
+							},
+							{
+								displayName: 'Fields',
+								name: 'fields',
+								type: 'fixedCollection',
+								typeOptions: {
+									multipleValues: true,
+								},
+								default: {},
+								description: 'Fields in this collection',
+								options: [
+									{
+										displayName: 'Field',
+										name: 'field',
+										values: [
+											{
+												displayName: 'Name',
+												name: 'name',
+												type: 'string',
+												default: '',
+												description: 'Field name',
+											},
+											{
+												displayName: 'Value',
+												name: 'value',
+												type: 'string',
+												default: '',
+												description: 'Field value',
+											},
+										],
+									},
+								],
+							},
+						],
+					},
+				],
+			},
+			// Custom Fields for Create
+			{
+				displayName: 'Custom Fields',
+				name: 'createCustomFields',
+				type: 'fixedCollection',
+				typeOptions: {
+					multipleValues: true,
+				},
+				displayOptions: {
+					show: {
+						operation: ['create'],
+					},
+				},
+				default: {},
+				description: 'Custom fields for the contact',
+				options: [
+					{
+						displayName: 'Field',
+						name: 'field',
+						values: [
+							{
+								displayName: 'Display Name',
+								name: 'displayName',
+								type: 'string',
+								default: '',
+								description: 'Display name of the custom field',
+							},
+							{
+								displayName: 'Name',
+								name: 'name',
+								type: 'string',
+								default: '',
+								description: 'Name of the custom field',
+							},
+							{
+								displayName: 'Value',
+								name: 'value',
+								type: 'string',
+								default: '',
+								description: 'Value of the custom field',
+							},
+						],
+					},
+				],
 			},
 			// Update Contact Fields
 			{
@@ -858,6 +1416,9 @@ export class VirtuousContactNode implements INodeType {
 					case 'update':
 						responseData = await updateContact(this, i);
 						break;
+					case 'create':
+						responseData = await createContact(this, i);
+						break;
 					default:
 						throw new NodeOperationError(this.getNode(), `The operation "${operation}" is not known!`);
 				}
@@ -1425,6 +1986,129 @@ async function updateContact(context: IExecuteFunctions, itemIndex: number): Pro
 	const requestOptions: IRequestOptions = {
 		method: 'PUT',
 		url: `${baseUrl}/api/Contact/${contactId}`,
+		body: requestBody,
+		json: true,
+	};
+
+	return await context.helpers.requestWithAuthentication.call(
+		context,
+		'virtuousApi',
+		requestOptions
+	);
+}
+
+async function createContact(context: IExecuteFunctions, itemIndex: number): Promise<any> {
+	const contactData = context.getNodeParameter('createContactData', itemIndex) as any;
+	const contactAddresses = context.getNodeParameter('contactAddresses', itemIndex, {}) as any;
+	const contactIndividuals = context.getNodeParameter('contactIndividuals', itemIndex, {}) as any;
+	const contactMethods = context.getNodeParameter('contactMethods', itemIndex, {}) as any;
+	const customCollections = context.getNodeParameter('createCustomCollections', itemIndex, {}) as any;
+	const customFields = context.getNodeParameter('createCustomFields', itemIndex, {}) as any;
+
+	const credentials = await context.getCredentials('virtuousApi');
+	const baseUrl = getBaseUrlFromCredentials(credentials);
+
+	// Build the request body
+	const requestBody: any = {};
+
+	// Basic contact data
+	if (contactData.anniversaryDay) requestBody.anniversaryDay = contactData.anniversaryDay;
+	if (contactData.anniversaryMonth) requestBody.anniversaryMonth = contactData.anniversaryMonth;
+	if (contactData.anniversaryYear) requestBody.anniversaryYear = contactData.anniversaryYear;
+	if (contactData.contactType) requestBody.contactType = contactData.contactType;
+	if (contactData.description) requestBody.description = contactData.description;
+	if (contactData.informalName) requestBody.informalName = contactData.informalName;
+	if (contactData.isArchived !== undefined) requestBody.isArchived = contactData.isArchived;
+	if (contactData.isPrivate !== undefined) requestBody.isPrivate = contactData.isPrivate;
+	if (contactData.maritalStatus) requestBody.maritalStatus = contactData.maritalStatus;
+	if (contactData.name) requestBody.name = contactData.name;
+	if (contactData.originSegmentId) requestBody.originSegmentId = contactData.originSegmentId;
+	if (contactData.referenceId) requestBody.referenceId = contactData.referenceId;
+	if (contactData.referenceSource) requestBody.referenceSource = contactData.referenceSource;
+	if (contactData.website) requestBody.website = contactData.website;
+
+	// Contact addresses
+	if (contactAddresses.address && contactAddresses.address.length > 0) {
+		requestBody.contactAddresses = contactAddresses.address.map((address: any) => {
+			const addressObj: any = {};
+			if (address.address1) addressObj.address1 = address.address1;
+			if (address.address2) addressObj.address2 = address.address2;
+			if (address.city) addressObj.city = address.city;
+			if (address.countryCode) addressObj.countryCode = address.countryCode;
+			if (address.isPrimary !== undefined) addressObj.isPrimary = address.isPrimary;
+			if (address.label) addressObj.label = address.label;
+			if (address.latitude) addressObj.latitude = address.latitude;
+			if (address.longitude) addressObj.longitude = address.longitude;
+			if (address.postal) addressObj.postal = address.postal;
+			if (address.stateCode) addressObj.stateCode = address.stateCode;
+			return addressObj;
+		});
+	}
+
+	// Contact individuals
+	if (contactIndividuals.individual && contactIndividuals.individual.length > 0) {
+		requestBody.contactIndividuals = contactIndividuals.individual.map((individual: any, index: number) => {
+			const individualObj: any = {};
+			if (individual.approximateAge) individualObj.approximateAge = individual.approximateAge;
+			if (individual.birthDay) individualObj.birthDay = individual.birthDay;
+			if (individual.birthMonth) individualObj.birthMonth = individual.birthMonth;
+			if (individual.birthYear) individualObj.birthYear = individual.birthYear;
+			if (individual.firstName) individualObj.firstName = individual.firstName;
+			if (individual.gender) individualObj.gender = individual.gender;
+			if (individual.isDeceased !== undefined) individualObj.isDeceased = individual.isDeceased;
+			if (individual.isPrimary !== undefined) individualObj.isPrimary = individual.isPrimary;
+			if (individual.isSecondary !== undefined) individualObj.isSecondary = individual.isSecondary;
+			if (individual.lastName) individualObj.lastName = individual.lastName;
+			if (individual.middleName) individualObj.middleName = individual.middleName;
+			if (individual.passion) individualObj.passion = individual.passion;
+			if (individual.prefix) individualObj.prefix = individual.prefix;
+			if (individual.suffix) individualObj.suffix = individual.suffix;
+
+			// Add contact methods for this individual
+			if (contactMethods.method && contactMethods.method.length > 0) {
+				const methodsForThisIndividual = contactMethods.method.filter((method: any) =>
+					method.individualIndex === index
+				);
+
+				if (methodsForThisIndividual.length > 0) {
+					individualObj.contactMethods = methodsForThisIndividual.map((method: any) => {
+						const methodObj: any = {};
+						if (method.isOptedIn !== undefined) methodObj.isOptedIn = method.isOptedIn;
+						if (method.isPrimary !== undefined) methodObj.isPrimary = method.isPrimary;
+						if (method.type) methodObj.type = method.type;
+						if (method.value) methodObj.value = method.value;
+						return methodObj;
+					});
+				}
+			}
+
+			return individualObj;
+		});
+	}
+
+	// Custom collections
+	if (customCollections.collection && customCollections.collection.length > 0) {
+		requestBody.customCollections = customCollections.collection.map((collection: any) => ({
+			name: collection.name,
+			fields: collection.fields?.field ? collection.fields.field.map((field: any) => ({
+				name: field.name,
+				value: field.value,
+			})) : [],
+		}));
+	}
+
+	// Custom fields
+	if (customFields.field && customFields.field.length > 0) {
+		requestBody.customFields = customFields.field.map((field: any) => ({
+			name: field.name,
+			value: field.value,
+			displayName: field.displayName,
+		}));
+	}
+
+	const requestOptions: IRequestOptions = {
+		method: 'POST',
+		url: `${baseUrl}/api/Contact`,
 		body: requestBody,
 		json: true,
 	};

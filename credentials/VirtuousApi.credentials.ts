@@ -9,6 +9,7 @@ export class VirtuousApi implements ICredentialType {
 	name = 'virtuousApi';
 	displayName = 'Virtuous API';
 	documentationUrl = 'https://docs.virtuoussoftware.com/';
+	icon = 'file:virtuous-logo-mark.svg' as const;
 	properties: INodeProperties[] = [
 		{
 			displayName: 'Environment',
