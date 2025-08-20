@@ -6,12 +6,18 @@ import type {
 	IRequestOptions,
 } from 'n8n-workflow';
 import { NodeConnectionType, NodeOperationError } from 'n8n-workflow';
+import {
+	VIRTUOUS_ICON,
+	getBaseUrlFromCredentials,
+	handleAutomaticPagination,
+	extractContactsFromResponse,
+} from '../../utils/VirtuousUtils';
 
 export class VirtuousContactNode implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Virtuous Contact',
 		name: 'virtuousContactNode',
-		icon: 'file:virtuous-logo-mark.svg',
+		icon: VIRTUOUS_ICON,
 		group: ['input'],
 		version: 1,
 		description: 'Get contact information from Virtuous CRM',
@@ -36,25 +42,25 @@ export class VirtuousContactNode implements INodeType {
 					{
 						name: 'Create Contact',
 						value: 'create',
-						description: 'Create a new contact',
+						description: 'Create a new contact record in Virtuous. Requires at least a name or email address.',
 						action: 'Create a new contact',
 					},
 					{
 						name: 'Get Contact by Email',
 						value: 'getByEmail',
-						description: 'Get a contact by their email address',
+						description: 'Find and retrieve a single contact using their email address. Returns null if not found.',
 						action: 'Get a contact by email',
 					},
 					{
 						name: 'Get Contact by ID',
 						value: 'getById',
-						description: 'Get a specific contact by their ID',
+						description: 'Retrieve a specific contact using their Virtuous ID. Fastest way to get a known contact.',
 						action: 'Get a contact by ID',
 					},
 					{
 						name: 'Search Contacts',
 						value: 'search',
-						description: 'Search for contacts with filters',
+						description: 'Query contacts with advanced filters (name, tags, custom fields). Supports pagination for large result sets.',
 						action: 'Search contacts',
 					},
 					{
@@ -70,29 +76,31 @@ export class VirtuousContactNode implements INodeType {
 			{
 				displayName: 'Contact ID',
 				name: 'contactId',
-				type: 'number',
+				type: 'string',
 				required: true,
 				displayOptions: {
 					show: {
 						operation: ['getById'],
 					},
 				},
-				default: 0,
-				description: 'The ID of the contact to retrieve',
+				default: '={{ $json.Id || $json.id }}',
+				placeholder: '{{ $json.ID }} or 12345',
+				description: 'The ID of the contact to retrieve. Use expressions to get from previous node data.',
 			},
 			// Contact ID field for update
 			{
 				displayName: 'Contact ID',
 				name: 'contactId',
-				type: 'number',
+				type: 'string',
 				required: true,
 				displayOptions: {
 					show: {
 						operation: ['update'],
 					},
 				},
-				default: 0,
-				description: 'The ID of the contact to update',
+				default: '={{ $json.id }}',
+				placeholder: '{{ $json.ID }} or 12345',
+				description: 'The ID of the contact to update. Use expressions to get from previous node data.',
 			},
 			// Email field
 			{
@@ -107,7 +115,7 @@ export class VirtuousContactNode implements INodeType {
 				},
 				default: '',
 				placeholder: 'contact@example.com',
-				description: 'The email address of the contact to retrieve',
+				description: 'The email address to search for. Returns the first matching contact or null if not found.',
 			},
 			// Create Contact Fields
 			{
@@ -889,7 +897,7 @@ export class VirtuousContactNode implements INodeType {
 				},
 				default: {},
 				placeholder: 'Add Filter',
-				description: 'Add filters to narrow down your contact search',
+				description: 'Build complex search queries using multiple filter types. Combine name searches, tags, custom fields, and date ranges.',
 				options: [
 					// Contact ID Filter
 					{
@@ -1266,7 +1274,7 @@ export class VirtuousContactNode implements INodeType {
 				},
 				default: {},
 				placeholder: 'Add Pagination',
-				description: 'Configure pagination settings',
+				description: 'Control how results are returned: all at once, in batches, or page by page. Choose based on your workflow needs.',
 				options: [
 					{
 						displayName: 'Pagination',
@@ -1281,10 +1289,26 @@ export class VirtuousContactNode implements INodeType {
 									maxValue: 1000,
 								},
 								default: 50,
-								description: 'Number of contacts per batch (each batch becomes one workflow item)',
+								description: 'Number of contacts per batch (each batch becomes one workflow item). Use smaller values for more granular processing, larger for efficiency.',
 								displayOptions: {
 									show: {
 										paginationMode: ['automaticBatched'],
+									},
+								},
+							},
+							{
+								displayName: 'Internal Batch Size',
+								name: 'internalBatchSize',
+								type: 'number',
+								typeOptions: {
+									minValue: 10,
+									maxValue: 500,
+								},
+								default: 100,
+								description: 'Number of records to fetch per API call (larger = faster but more memory)',
+								displayOptions: {
+									show: {
+										paginationMode: ['automatic', 'automaticBatched'],
 									},
 								},
 							},
@@ -1297,7 +1321,7 @@ export class VirtuousContactNode implements INodeType {
 									maxValue: 100,
 								},
 								default: 10,
-								description: 'Maximum number of pages to retrieve (safety limit)',
+								description: 'Safety limit for automatic pagination. Set higher if you expect large datasets, lower to prevent timeouts.',
 								displayOptions: {
 									show: {
 										paginationMode: ['automatic', 'automaticBatched'],
@@ -1312,25 +1336,26 @@ export class VirtuousContactNode implements INodeType {
 									{
 										name: 'Off',
 										value: 'off',
-										description: 'Disable automatic pagination',
+										description: 'Return raw API response (one page only). Use when you want the original response structure or are testing queries.',
 									},
 									{
 										name: 'Automatic (All Results)',
 										value: 'automatic',
-										description: 'Automatically paginate through all results and return as individual items',
+										description: 'Fetch ALL contacts and return each as individual workflow items. Perfect for iterating with other nodes (e.g., Gift queries per contact).',
 									},
 									{
 										name: 'Automatic (Batched)',
 										value: 'automaticBatched',
-										description: 'Automatically paginate and return results in batches (better for API calls, bulk operations)',
+										description: 'Fetch ALL contacts but group them into batches. Each batch becomes one workflow item with metadata. Good for bulk processing.',
 									},
 									{
 										name: 'Page by Page',
 										value: 'pageByPage',
-										description: 'Return one page at a time with pagination info (useful for large datasets)',
+										description: 'Return exactly one page with navigation info. Use when you need precise control over pagination or are building custom pagination flows.',
 									},
 								],
 								default: 'off',
+								description: 'Choose how to handle large result sets. "Automatic" is best for iterating with other nodes.',
 							},
 							{
 								displayName: 'Skip (Starting Point)',
@@ -1340,10 +1365,10 @@ export class VirtuousContactNode implements INodeType {
 									minValue: 0,
 								},
 								default: 0,
-								description: 'Number of records to skip (starting point for pagination)',
+								description: 'Number of records to skip. Use 0 for first page, 50 for second (if page size=50), etc.',
 								displayOptions: {
-									hide: {
-										paginationMode: ['off'],
+									show: {
+										paginationMode: ['pageByPage'],
 									},
 								},
 							},
@@ -1356,10 +1381,10 @@ export class VirtuousContactNode implements INodeType {
 									maxValue: 500,
 								},
 								default: 50,
-								description: 'Number of records per page (max 500)',
+								description: 'Number of records per page (max 500). Includes pagination metadata in response.',
 								displayOptions: {
-									hide: {
-										paginationMode: ['off'],
+									show: {
+										paginationMode: ['pageByPage'],
 									},
 								},
 							},
@@ -1374,20 +1399,21 @@ export class VirtuousContactNode implements INodeType {
 				type: 'collection',
 				default: {},
 				placeholder: 'Add Option',
+				description: 'Extra data to include in the API response. Enable for richer contact information.',
 				options: [
 					{
 						displayName: 'Include Segments',
 						name: 'includeSegments',
 						type: 'boolean',
 						default: false,
-						description: 'Whether to include segment information in the response',
+						description: 'Whether to include contact segment/group membership data. Useful for filtering or categorizing contacts.',
 					},
 					{
 						displayName: 'Include Custom Fields',
 						name: 'includeCustomFields',
 						type: 'boolean',
 						default: false,
-						description: 'Whether to include custom fields in the response',
+						description: 'Whether to include all custom field values for contacts. Required if you need organization-specific data.',
 					},
 				],
 			},
@@ -1448,21 +1474,15 @@ export class VirtuousContactNode implements INodeType {
 }
 
 // Helper function to get base URL from credentials
-function getBaseUrlFromCredentials(credentials: any): string {
-	const environment = credentials.environment as string;
-	switch (environment) {
-		case 'dev':
-			return 'https://apidevlegacy.virtuoussoftware.com';
-		case 'qa':
-			return 'https://apiqa.virtuoussoftware.com';
-		default:
-			return 'https://apidevlegacy.virtuoussoftware.com';
-	}
-}
-
 // Standalone helper functions using context
 async function getContactById(context: IExecuteFunctions, itemIndex: number): Promise<any> {
-	const contactId = context.getNodeParameter('contactId', itemIndex) as number;
+	const contactIdParam = context.getNodeParameter('contactId', itemIndex) as string;
+	// Convert string to number, handling both direct numbers and expression results
+	const contactId = parseInt(contactIdParam, 10);
+
+	if (isNaN(contactId)) {
+		throw new NodeOperationError(context.getNode(), `Invalid contact ID: ${contactIdParam}. Please provide a valid number.`);
+	}
 
 	// Get the credentials to determine the base URL
 	const credentials = await context.getCredentials('virtuousApi');
@@ -1523,36 +1543,83 @@ async function searchContacts(context: IExecuteFunctions, itemIndex: number): Pr
 	const paginationMode = paginationSettings.paginationMode || 'off';
 	const pageSize = paginationSettings.take || 50;
 	const startSkip = paginationSettings.skip || 0;
-	const maxPages = paginationSettings.maxPages || 10;
 	const batchSize = paginationSettings.batchSize || 50;
+	const internalBatchSize = paginationSettings.internalBatchSize || 100;
+	const maxPages = paginationSettings.maxPages || 10;
 
 	// Check if automatic pagination is enabled
 	if (paginationMode === 'automatic') {
+		const requestBody = buildRequestBody(searchFilters);
 		const results = await handleAutomaticPagination(
 			context,
-			baseUrl,
-			searchFilters,
-			additionalOptions,
-			startSkip,
-			pageSize,
-			maxPages
+			async (skip: number, take: number) => {
+				const queryParams: any = { take, skip };
+				if (additionalOptions.includeSegments) {
+					queryParams.includeSegments = 'true';
+				}
+				if (additionalOptions.includeCustomFields) {
+					queryParams.includeCustomFields = 'true';
+				}
+
+				const requestOptions: IRequestOptions = {
+					method: 'POST',
+					url: `${baseUrl}/api/Contact/Query`,
+					qs: queryParams,
+					body: requestBody,
+					json: true,
+				};
+
+				const response = await context.helpers.requestWithAuthentication.call(
+					context,
+					'virtuousApi',
+					requestOptions
+				);
+
+				// Extract contacts from response and ensure we return an array for pagination
+				return extractContactsFromResponse(response);
+			},
+			internalBatchSize, // Use the user-configurable batch size
+			maxPages // Pass max pages limit
 		);
 
-		return results.results;
+		return results;
 	}	// Check if batched automatic pagination is enabled
 	if (paginationMode === 'automaticBatched') {
+		const requestBody = buildRequestBody(searchFilters);
 		const results = await handleAutomaticPagination(
 			context,
-			baseUrl,
-			searchFilters,
-			additionalOptions,
-			startSkip,
-			pageSize,
-			maxPages
+			async (skip: number, take: number) => {
+				const queryParams: any = { take, skip };
+				if (additionalOptions.includeSegments) {
+					queryParams.includeSegments = 'true';
+				}
+				if (additionalOptions.includeCustomFields) {
+					queryParams.includeCustomFields = 'true';
+				}
+
+				const requestOptions: IRequestOptions = {
+					method: 'POST',
+					url: `${baseUrl}/api/Contact/Query`,
+					qs: queryParams,
+					body: requestBody,
+					json: true,
+				};
+
+				const response = await context.helpers.requestWithAuthentication.call(
+					context,
+					'virtuousApi',
+					requestOptions
+				);
+
+				// Extract contacts from response and ensure we return an array for pagination
+				return extractContactsFromResponse(response);
+			},
+			internalBatchSize, // Use the user-configurable internal batch size
+			maxPages // Pass max pages limit
 		);
 
 		// Split results into batches
-		const contacts = results.results;
+		const contacts = results;
 		const batches = [];
 
 		for (let i = 0; i < contacts.length; i += batchSize) {
@@ -1662,93 +1729,6 @@ async function searchContacts(context: IExecuteFunctions, itemIndex: number): Pr
 }
 
 // Helper function for automatic pagination
-async function handleAutomaticPagination(
-	context: IExecuteFunctions,
-	baseUrl: string,
-	searchFilters: any,
-	additionalOptions: any,
-	startSkip: number,
-	pageSize: number,
-	maxPages: number
-): Promise<any> {
-	const allResults: any[] = [];
-	let currentSkip = startSkip;
-	let pageCount = 0;
-
-	// Build the request body once (it doesn't change between requests)
-	const requestBody = buildRequestBody(searchFilters);
-
-	while (pageCount < maxPages) {
-		// Set up query params for this page
-		const queryParams: any = {
-			take: pageSize,
-			skip: currentSkip,
-		};
-
-		// Add additional options to query params
-		if (additionalOptions.includeSegments) {
-			queryParams.includeSegments = 'true';
-		}
-		if (additionalOptions.includeCustomFields) {
-			queryParams.includeCustomFields = 'true';
-		}
-
-		// Make the request
-		const requestOptions: IRequestOptions = {
-			method: 'POST',
-			url: `${baseUrl}/api/Contact/Query`,
-			qs: queryParams,
-			body: requestBody,
-			json: true,
-		};
-
-		const response = await context.helpers.requestWithAuthentication.call(
-			context,
-			'virtuousApi',
-			requestOptions
-		);
-
-		// Handle different response structures
-		let contacts = [];
-		if (Array.isArray(response)) {
-			// If response is directly an array
-			contacts = response;
-		} else if (response && Array.isArray(response.list)) {
-			// If response has a 'list' property with contacts
-			contacts = response.list;
-		} else if (response && Array.isArray(response.contacts)) {
-			// If response has a 'contacts' property
-			contacts = response.contacts;
-		} else if (response && Array.isArray(response.data)) {
-			// If response has a 'data' property
-			contacts = response.data;
-		}
-
-		// If no contacts found, stop pagination
-		if (!contacts || contacts.length === 0) {
-			break;
-		}
-
-		// Add results to our collection
-		allResults.push(...contacts);
-
-		// If we got fewer results than the page size, we've reached the end
-		if (contacts.length < pageSize) {
-			break;
-		}
-
-		// Prepare for next page
-		currentSkip += pageSize;
-		pageCount++;
-	}
-
-	return {
-		results: allResults,
-		totalResults: allResults.length,
-		pagesFetched: pageCount
-	};
-}
-
 // Helper function to build request body from search filters
 function buildRequestBody(searchFilters: any): any {
 	const requestBody: any = {
@@ -1918,7 +1898,14 @@ function buildRequestBody(searchFilters: any): any {
 }
 
 async function updateContact(context: IExecuteFunctions, itemIndex: number): Promise<any> {
-	const contactId = context.getNodeParameter('contactId', itemIndex) as number;
+	const contactIdParam = context.getNodeParameter('contactId', itemIndex) as string;
+	// Convert string to number, handling both direct numbers and expression results
+	const contactId = parseInt(contactIdParam, 10);
+
+	if (isNaN(contactId)) {
+		throw new NodeOperationError(context.getNode(), `Invalid contact ID: ${contactIdParam}. Please provide a valid number.`);
+	}
+
 	const contactData = context.getNodeParameter('contactData', itemIndex) as any;
 
 	// Get the credentials to determine the base URL

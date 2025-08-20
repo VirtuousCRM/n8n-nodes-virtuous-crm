@@ -10,6 +10,7 @@ export class VirtuousApi implements ICredentialType {
 	displayName = 'Virtuous API';
 	documentationUrl = 'https://docs.virtuoussoftware.com/';
 	icon = 'file:virtuous-logo-mark.svg' as const;
+
 	properties: INodeProperties[] = [
 		{
 			displayName: 'Environment',
@@ -25,6 +26,11 @@ export class VirtuousApi implements ICredentialType {
 					name: 'QA',
 					value: 'qa',
 					description: 'QA environment (apiqa.virtuoussoftware.com)',
+				},
+				{
+					name: 'Production',
+					value: 'prod',
+					description: 'Production environment (api.virtuoussoftware.com)',
 				},
 			],
 			default: 'dev',
@@ -61,8 +67,8 @@ export class VirtuousApi implements ICredentialType {
 	// Test the credentials by making a request to the API
 	test: ICredentialTestRequest = {
 		request: {
-			// Use expression to dynamically select base URL based on environment
-			baseURL: '={{$credentials.environment === "qa" ? "https://apiqa.virtuoussoftware.com" : "https://apidevlegacy.virtuoussoftware.com"}}',
+			// Use a cleaner expression to select base URL based on environment
+			baseURL: '={{ {"dev": "https://apidevlegacy.virtuoussoftware.com", "qa": "https://apiqa.virtuoussoftware.com", "prod": "https://api.virtuoussoftware.com"}[$credentials.environment] || "https://apidevlegacy.virtuoussoftware.com" }}',
 			url: '/api/Organization',
 			method: 'GET',
 		},

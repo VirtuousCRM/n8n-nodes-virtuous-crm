@@ -41,7 +41,8 @@
 			"dist/nodes/ExampleNode/ExampleNode.node.js",
 			"dist/nodes/HttpBin/HttpBin.node.js",
 			"dist/nodes/VirtuousContactNode/VirtuousContactNode.node.js",
-			"dist/nodes/VirtuousGiftNode/VirtuousGiftNode.node.js"
+			"dist/nodes/VirtuousGiftNode/VirtuousGiftNode.node.js",
+			"dist/nodes/VirtuousQuickSearchNode/VirtuousQuickSearchNode.node.js"
 		]
 	},
   "devDependencies": {
