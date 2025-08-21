@@ -11,6 +11,12 @@ import {
 	getBaseUrlFromCredentials,
 	handleAutomaticPagination,
 	extractGiftsFromResponse,
+	createBatchSizeParameter,
+	createInternalBatchSizeParameter,
+	createMaxPagesParameter,
+	createPaginationModeParameter,
+	createSkipParameter,
+	createTakeParameter,
 } from '../../utils/VirtuousUtils';
 
 export class VirtuousGiftNode implements INodeType {
@@ -150,112 +156,21 @@ export class VirtuousGiftNode implements INodeType {
 						name: 'pagination',
 						values: [
 							{
-								displayName: 'Batch Size',
-								name: 'batchSize',
-								type: 'number',
-								typeOptions: {
-									minValue: 1,
-									maxValue: 1000,
-								},
-								default: 50,
+								...createBatchSizeParameter(),
 								description: 'Number of gifts per batch (each batch becomes one workflow item). Use smaller values for more granular processing, larger for efficiency.',
-								displayOptions: {
-									show: {
-										paginationMode: ['automaticBatched'],
-									},
-								},
 							},
+							createInternalBatchSizeParameter(),
+							createMaxPagesParameter(),
+							createPaginationModeParameter('gifts'),
+							createSkipParameter(),
 							{
-								displayName: 'Internal Batch Size',
-								name: 'internalBatchSize',
-								type: 'number',
-								typeOptions: {
-									minValue: 10,
-									maxValue: 500,
-								},
-								default: 100,
-								description: 'Number of records to fetch per API call (larger = faster but more memory)',
-								displayOptions: {
-									show: {
-										paginationMode: ['automatic', 'automaticBatched'],
-									},
-								},
-							},
-							{
-								displayName: 'Max Pages',
-								name: 'maxPages',
-								type: 'number',
-								typeOptions: {
-									minValue: 1,
-									maxValue: 100,
-								},
-								default: 10,
-								description: 'Safety limit for automatic pagination. Set higher if you expect large datasets, lower to prevent timeouts.',
-								displayOptions: {
-									show: {
-										paginationMode: ['automatic', 'automaticBatched'],
-									},
-								},
-							},
-							{
-								displayName: 'Pagination Mode',
-								name: 'paginationMode',
-								type: 'options',
-								options: [
-									{
-										name: 'Off',
-										value: 'off',
-										description: 'Return raw API response (one page only). Use when you want the original response structure or are testing queries.',
-									},
-									{
-										name: 'Automatic (All Results)',
-										value: 'automatic',
-										description: 'Fetch ALL gifts and return each as individual workflow items. Perfect for iterating with other nodes.',
-									},
-									{
-										name: 'Automatic (Batched)',
-										value: 'automaticBatched',
-										description: 'Fetch ALL gifts but group them into batches. Each batch becomes one workflow item with metadata. Good for bulk processing.',
-									},
-									{
-										name: 'Page by Page',
-										value: 'pageByPage',
-										description: 'Return exactly one page with navigation info. Use when you need precise control over pagination.',
-									},
-								],
-								default: 'off',
-								description: 'Choose how to handle large result sets. "Automatic" is best for iterating with other nodes.',
-							},
-							{
-								displayName: 'Skip (Starting Point)',
-								name: 'skip',
-								type: 'number',
-								typeOptions: {
-									minValue: 0,
-								},
-								default: 0,
-								description: 'Number of records to skip. Use 0 for first page, 50 for second (if page size=50), etc.',
-								displayOptions: {
-									show: {
-										paginationMode: ['pageByPage'],
-									},
-								},
-							},
-							{
-								displayName: 'Take (Page Size)',
-								name: 'take',
-								type: 'number',
-								typeOptions: {
-									minValue: 1,
-									maxValue: 1000,
-								},
-								default: 50,
-								description: 'Number of results to return per page',
+								...createTakeParameter(['off', 'pageByPage'], 'Number of gifts to return per contact. When processing multiple contacts, this limit applies to EACH contact separately.'),
 								displayOptions: {
 									show: {
 										paginationMode: ['off', 'pageByPage'],
 									},
 								},
+								description: 'Maximum number of gifts to return in a single API call. When pagination is "Off", this limits how many gifts you get back (starting from the first gift). Use higher values if you expect more gifts than the default 50.',
 							},
 						],
 					},
@@ -276,12 +191,180 @@ export class VirtuousGiftNode implements INodeType {
 				description: 'Filters to apply when searching for gifts',
 				options: [
 					{
+						displayName: 'Amount',
+						name: 'amount',
+						values: [
+							{
+								displayName: 'Operator',
+								name: 'operator',
+								type: 'options',
+								options: [
+									{ name: 'Between', value: 'Between' },
+									{ name: 'Greater Than', value: 'GreaterThan' },
+									{ name: 'Greater Than Or Equal', value: 'GreaterThanOrEqual' },
+									{ name: 'Is', value: 'Is' },
+									{ name: 'Less Than', value: 'LessThan' },
+									{ name: 'Less Than Or Equal', value: 'LessThanOrEqual' },
+								],
+								default: 'Is',
+							},
+							{
+								displayName: 'Amount Value',
+								name: 'amountValue',
+								type: 'number',
+								typeOptions: {
+									numberPrecision: 2,
+									minValue: 0,
+								},
+								default: 0,
+								description: 'The amount value for the filter',
+								displayOptions: {
+									hide: {
+										operator: ['Between'],
+									},
+								},
+							},
+							{
+								displayName: 'From Amount',
+								name: 'fromAmount',
+								type: 'number',
+								typeOptions: {
+									numberPrecision: 2,
+									minValue: 0,
+								},
+								default: 0,
+								description: 'The minimum amount for Between operator',
+								displayOptions: {
+									show: {
+										operator: ['Between'],
+									},
+								},
+							},
+							{
+								displayName: 'To Amount',
+								name: 'toAmount',
+								type: 'number',
+								typeOptions: {
+									numberPrecision: 2,
+									minValue: 0,
+								},
+								default: 0,
+								description: 'The maximum amount for Between operator',
+								displayOptions: {
+									show: {
+										operator: ['Between'],
+									},
+								},
+							},
+						],
+					},
+					{
 						displayName: 'Contact ID',
 						name: 'contactId',
 						type: 'string',
 						default: '={{ $json.Id || $json.id }}',
 						placeholder: '{{ $json.ID }} or 12345',
 						description: 'Filter by contact ID. Use expressions like {{ $JSON.ID }} or {{ $JSON.ID }} to get from previous node data.',
+					},
+					{
+						displayName: 'Contact Name',
+						name: 'contactName',
+						values: [
+							{
+								displayName: 'Operator',
+								name: 'operator',
+								type: 'options',
+								options: [
+									{ name: 'Contains', value: 'Contains' },
+									{ name: 'Ends With', value: 'EndsWith' },
+									{ name: 'Is', value: 'Is' },
+									{ name: 'Starts With', value: 'StartsWith' },
+								],
+								default: 'Contains',
+							},
+							{
+								displayName: 'Name Value',
+								name: 'nameValue',
+								type: 'string',
+								default: '',
+								description: 'The contact name to search for',
+							},
+						],
+					},
+					{
+						displayName: 'Contact Tag',
+						name: 'contactTag',
+						values: [
+							{
+								displayName: 'Operator',
+								name: 'operator',
+								type: 'options',
+								options: [
+									{ name: 'Is Any Of', value: 'IsAnyOf' },
+									{ name: 'Is None Of', value: 'IsNoneOf' },
+								],
+								default: 'IsAnyOf',
+							},
+							{
+								displayName: 'Tag Values',
+								name: 'tagValues',
+								type: 'string',
+								default: '',
+								description: 'Comma-separated list of tag names or IDs to match against',
+								placeholder: 'Donor, VIP, Major Gift',
+							},
+						],
+					},
+					{
+						displayName: 'Create Date',
+						name: 'createDate',
+						values: [
+							{
+								displayName: 'Operator',
+								name: 'operator',
+								type: 'options',
+								options: [
+									{ name: 'After', value: 'After' },
+									{ name: 'Before', value: 'Before' },
+									{ name: 'Between', value: 'Between' },
+									{ name: 'Is', value: 'Is' },
+									{ name: 'On Or After', value: 'OnOrAfter' },
+									{ name: 'On Or Before', value: 'OnOrBefore' },
+								],
+								default: 'After',
+							},
+							{
+								displayName: 'Date Value',
+								name: 'dateValue',
+								type: 'options',
+								options: [
+									{ name: '30 Days Ago', value: '30 Days Ago' },
+									{ name: '60 Days Ago', value: '60 Days Ago' },
+									{ name: '7 Days Ago', value: '7 Days Ago' },
+									{ name: '90 Days Ago', value: '90 Days Ago' },
+									{ name: 'Custom Date', value: 'custom' },
+									{ name: 'Last Month', value: 'Last Month' },
+									{ name: 'One Year Ago', value: 'One Year Ago' },
+									{ name: 'This Calendar Year', value: 'This Calendar Year' },
+									{ name: 'Today', value: 'Today' },
+									{ name: 'Yesterday', value: 'Yesterday' },
+								],
+								default: '30 Days Ago',
+								description: 'Select a predefined date or use custom',
+							},
+							{
+								displayName: 'Custom Date',
+								name: 'customDate',
+								type: 'dateTime',
+								default: '',
+								description: 'Custom date for filtering',
+								displayOptions: {
+									show: {
+										dateValue: ['custom'],
+									},
+								},
+							},
+						],
 					},
 					{
 						displayName: 'Gift Date From',
@@ -313,6 +396,57 @@ export class VirtuousGiftNode implements INodeType {
 						description: 'Filter by gift type',
 					},
 					{
+						displayName: 'Last Modified Date',
+						name: 'lastModifiedDate',
+						values: [
+							{
+								displayName: 'Operator',
+								name: 'operator',
+								type: 'options',
+								options: [
+									{ name: 'After', value: 'After' },
+									{ name: 'Before', value: 'Before' },
+									{ name: 'Between', value: 'Between' },
+									{ name: 'Is', value: 'Is' },
+									{ name: 'On Or After', value: 'OnOrAfter' },
+									{ name: 'On Or Before', value: 'OnOrBefore' },
+								],
+								default: 'After',
+							},
+							{
+								displayName: 'Date Value',
+								name: 'dateValue',
+								type: 'options',
+								options: [
+									{ name: '30 Days Ago', value: '30 Days Ago' },
+									{ name: '60 Days Ago', value: '60 Days Ago' },
+									{ name: '7 Days Ago', value: '7 Days Ago' },
+									{ name: '90 Days Ago', value: '90 Days Ago' },
+									{ name: 'Custom Date', value: 'custom' },
+									{ name: 'Last Month', value: 'Last Month' },
+									{ name: 'One Year Ago', value: 'One Year Ago' },
+									{ name: 'This Calendar Year', value: 'This Calendar Year' },
+									{ name: 'Today', value: 'Today' },
+									{ name: 'Yesterday', value: 'Yesterday' },
+								],
+								default: '30 Days Ago',
+								description: 'Select a predefined date or use custom',
+							},
+							{
+								displayName: 'Custom Date',
+								name: 'customDate',
+								type: 'dateTime',
+								default: '',
+								description: 'Custom date for filtering',
+								displayOptions: {
+									show: {
+										dateValue: ['custom'],
+									},
+								},
+							},
+						],
+					},
+					{
 						displayName: 'Maximum Amount',
 						name: 'maximumAmount',
 						type: 'number',
@@ -339,70 +473,33 @@ export class VirtuousGiftNode implements INodeType {
 			// Pagination options
 			{
 				displayName: 'Pagination',
-				name: 'pagination',
-				type: 'options',
+				name: 'searchPagination',
+				type: 'fixedCollection',
 				displayOptions: {
 					show: {
 						operation: ['search'],
 					},
 				},
+				default: {},
+				placeholder: 'Add Pagination',
+				description: 'Control how search results are returned: all at once, in batches, or page by page. Choose based on your workflow needs.',
 				options: [
 					{
-						name: 'Off',
-						value: 'off',
-						description: 'Return raw API response (one page only). Use when you want the original response structure.',
-					},
-					{
-						name: 'Automatic',
-						value: 'automatic',
-						description: 'Fetch ALL gifts and return each as individual workflow items. Perfect for iterating with other nodes.',
-					},
-					{
-						name: 'Batched',
-						value: 'batched',
-						description: 'Fetch ALL gifts but group them into batches. Each batch becomes one workflow item.',
-					},
-					{
-						name: 'Page by Page',
-						value: 'pageByPage',
-						description: 'Return exactly one page with navigation info. Use for precise pagination control.',
+						displayName: 'Pagination',
+						name: 'pagination',
+						values: [
+							{
+								...createBatchSizeParameter(),
+								description: 'Number of gifts per batch (each batch becomes one workflow item). Use smaller values for more granular processing, larger for efficiency.',
+							},
+							createInternalBatchSizeParameter(),
+							createMaxPagesParameter(),
+							createPaginationModeParameter('gifts'),
+							createSkipParameter(),
+							createTakeParameter(),
+						],
 					},
 				],
-				default: 'off',
-				description: 'How to handle pagination of results',
-			},
-			{
-				displayName: 'Take',
-				name: 'take',
-				type: 'number',
-				displayOptions: {
-					show: {
-						operation: ['search'],
-						pagination: ['off', 'batched', 'pageByPage'],
-					},
-				},
-				typeOptions: {
-					minValue: 1,
-					maxValue: 1000,
-				},
-				default: 50,
-				description: 'Number of results per page',
-			},
-			{
-				displayName: 'Skip',
-				name: 'skip',
-				type: 'number',
-				displayOptions: {
-					show: {
-						operation: ['search'],
-						pagination: ['off', 'pageByPage'],
-					},
-				},
-				typeOptions: {
-					minValue: 0,
-				},
-				default: 0,
-				description: 'Number of results to skip',
 			},
 		],
 	};
@@ -492,7 +589,7 @@ async function getGiftsByContact(context: IExecuteFunctions, itemIndex: number):
 	const credentials = await context.getCredentials('virtuousApi');
 	const baseUrl = getBaseUrlFromCredentials(credentials);
 
-	// If no pagination is configured, default to 'off' mode
+	// If no pagination is configured, default to 'off' mode with default take
 	if (!pagination) {
 		return await fetchGiftsByContact(context, baseUrl, contactId, sortBy, descending, 0, 50);
 	}
@@ -502,7 +599,7 @@ async function getGiftsByContact(context: IExecuteFunctions, itemIndex: number):
 	// Handle pagination
 	switch (paginationMode) {
 		case 'off':
-			const take = pagination.take || 50;
+			const take = (pagination && pagination.take !== undefined) ? pagination.take : 50;
 			return await fetchGiftsByContact(context, baseUrl, contactId, sortBy, descending, 0, take);
 
 		case 'automatic':
@@ -579,14 +676,8 @@ async function fetchGiftsByContact(context: IExecuteFunctions, baseUrl: string, 
 		requestOptions
 	);
 
-	// Handle different response formats
-	if (Array.isArray(response)) {
-		return response;
-	} else if (response && typeof response === 'object') {
-		return [response];
-	}
-
-	return response;
+	// Use the shared response extraction utility
+	return extractGiftsFromResponse(response);
 }
 
 // Advanced automatic pagination function for contact gifts
@@ -652,7 +743,10 @@ async function handleAdvancedContactGiftsBatchedPagination(
 // Function to search gifts
 async function searchGifts(context: IExecuteFunctions, itemIndex: number): Promise<any> {
 	const filters = context.getNodeParameter('filters', itemIndex) as any;
-	const pagination = context.getNodeParameter('pagination', itemIndex) as string;
+
+	// Get pagination configuration from fixedCollection
+	const paginationConfig = context.getNodeParameter('searchPagination', itemIndex, {}) as any;
+	const pagination = paginationConfig?.pagination;
 
 	const credentials = await context.getCredentials('virtuousApi');
 	const baseUrl = getBaseUrlFromCredentials(credentials);
@@ -660,7 +754,7 @@ async function searchGifts(context: IExecuteFunctions, itemIndex: number): Promi
 	// Build request body for gift search
 	const requestBody: any = {};
 
-	// Add filters to request body
+	// Add basic filters to request body
 	if (filters.contactId) {
 		const contactIdParam = filters.contactId as string;
 		const contactId = parseInt(contactIdParam, 10);
@@ -684,57 +778,280 @@ async function searchGifts(context: IExecuteFunctions, itemIndex: number): Promi
 		requestBody['Maximum Amount'] = filters.maximumAmount;
 	}
 
-	// Handle pagination
-	switch (pagination) {
-		case 'off':
-			const take = context.getNodeParameter('take', itemIndex, 50) as number;
-			const skip = context.getNodeParameter('skip', itemIndex, 0) as number;
-			requestBody.take = take;
-			requestBody.skip = skip;
-			break;
+	// Handle Last Modified Date filter (advanced filter structure)
+	if (filters.lastModifiedDate && filters.lastModifiedDate.length > 0) {
+		// Initialize filter group if we have advanced filters
+		if (!requestBody.filterGroups) {
+			requestBody.filterGroups = [];
+		}
 
-		case 'automatic':
-			return await handleAutomaticPagination(
-				context,
-				async (skip: number, take: number) => {
-					const paginatedBody = {
-						...requestBody,
-						skip,
-						take,
-					};
+		// Find or create the main filter group
+		let filterGroup = requestBody.filterGroups.find((fg: any) => fg.groupType === 'And');
+		if (!filterGroup) {
+			filterGroup = {
+				groupType: 'And',
+				conditions: []
+			};
+			requestBody.filterGroups.push(filterGroup);
+		}
 
-					const requestOptions: IRequestOptions = {
-						method: 'POST',
-						url: `${baseUrl}/api/Gift/Query`,
-						body: paginatedBody,
-						json: true,
-					};
+		// Process Last Modified Date filters
+		for (const filter of filters.lastModifiedDate) {
+			const condition: any = {
+				parameter: 'Last Modified Date',
+				operator: filter.operator
+			};
 
-					const response = await context.helpers.requestWithAuthentication.call(
-						context,
-						'virtuousApi',
-						requestOptions
-					);
+			if (filter.dateValue === 'custom') {
+				condition.value = filter.customDate;
+			} else {
+				condition.value = filter.dateValue;
+			}
 
-					// Extract gifts from response and ensure we return an array for pagination
-					return extractGiftsFromResponse(response);
-				}
-			);
-
-		case 'batched':
-			const batchTake = context.getNodeParameter('take', itemIndex, 50) as number;
-			requestBody.take = batchTake;
-			requestBody.skip = 0;
-			break;
-
-		case 'pageByPage':
-			const pageTake = context.getNodeParameter('take', itemIndex, 50) as number;
-			const pageSkip = context.getNodeParameter('skip', itemIndex, 0) as number;
-			requestBody.take = pageTake;
-			requestBody.skip = pageSkip;
-			break;
+			filterGroup.conditions.push(condition);
+		}
 	}
 
+	// Handle Amount filter (advanced filter structure)
+	if (filters.amount && filters.amount.length > 0) {
+		// Initialize filter group if we have advanced filters
+		if (!requestBody.filterGroups) {
+			requestBody.filterGroups = [];
+		}
+
+		// Find or create the main filter group
+		let filterGroup = requestBody.filterGroups.find((fg: any) => fg.groupType === 'And');
+		if (!filterGroup) {
+			filterGroup = {
+				groupType: 'And',
+				conditions: []
+			};
+			requestBody.filterGroups.push(filterGroup);
+		}
+
+		// Process Amount filters
+		for (const filter of filters.amount) {
+			const condition: any = {
+				parameter: 'Amount',
+				operator: filter.operator
+			};
+
+			// Handle different operators
+			if (filter.operator === 'Between') {
+				condition.value = `${filter.fromAmount}|${filter.toAmount}`;
+			} else {
+				condition.value = filter.amountValue;
+			}
+
+			filterGroup.conditions.push(condition);
+		}
+	}
+
+	// Handle Contact Name filter (advanced filter structure)
+	if (filters.contactName && filters.contactName.length > 0) {
+		// Initialize filter group if we have advanced filters
+		if (!requestBody.filterGroups) {
+			requestBody.filterGroups = [];
+		}
+
+		// Find or create the main filter group
+		let filterGroup = requestBody.filterGroups.find((fg: any) => fg.groupType === 'And');
+		if (!filterGroup) {
+			filterGroup = {
+				groupType: 'And',
+				conditions: []
+			};
+			requestBody.filterGroups.push(filterGroup);
+		}
+
+		// Process Contact Name filters
+		for (const filter of filters.contactName) {
+			const condition: any = {
+				parameter: 'Contact Name',
+				operator: filter.operator,
+				value: filter.nameValue
+			};
+
+			filterGroup.conditions.push(condition);
+		}
+	}
+
+	// Handle Contact Tag filter (advanced filter structure)
+	if (filters.contactTag && filters.contactTag.length > 0) {
+		// Initialize filter group if we have advanced filters
+		if (!requestBody.filterGroups) {
+			requestBody.filterGroups = [];
+		}
+
+		// Find or create the main filter group
+		let filterGroup = requestBody.filterGroups.find((fg: any) => fg.groupType === 'And');
+		if (!filterGroup) {
+			filterGroup = {
+				groupType: 'And',
+				conditions: []
+			};
+			requestBody.filterGroups.push(filterGroup);
+		}
+
+		// Process Contact Tag filters
+		for (const filter of filters.contactTag) {
+			const condition: any = {
+				parameter: 'Contact Tag',
+				operator: filter.operator
+			};
+
+			// Handle multiple values for tag filtering (comma-separated)
+			if (filter.tagValues) {
+				// Split by comma and trim whitespace
+				const tagList = filter.tagValues.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag.length > 0);
+				condition.value = tagList.join('|'); // Use pipe separator for multiple values
+			} else {
+				condition.value = '';
+			}
+
+			filterGroup.conditions.push(condition);
+		}
+	}
+
+	// Handle Create Date filter (advanced filter structure)
+	if (filters.createDate && filters.createDate.length > 0) {
+		// Initialize filter group if we have advanced filters
+		if (!requestBody.filterGroups) {
+			requestBody.filterGroups = [];
+		}
+
+		// Find or create the main filter group
+		let filterGroup = requestBody.filterGroups.find((fg: any) => fg.groupType === 'And');
+		if (!filterGroup) {
+			filterGroup = {
+				groupType: 'And',
+				conditions: []
+			};
+			requestBody.filterGroups.push(filterGroup);
+		}
+
+		// Process Create Date filters
+		for (const filter of filters.createDate) {
+			const condition: any = {
+				parameter: 'Create Date',
+				operator: filter.operator
+			};
+
+			if (filter.dateValue === 'custom') {
+				condition.value = filter.customDate;
+			} else {
+				condition.value = filter.dateValue;
+			}
+
+			filterGroup.conditions.push(condition);
+		}
+	}	// If no pagination is configured, default to 'off' mode
+	if (!pagination) {
+		requestBody.take = 50;
+		requestBody.skip = 0;
+		return await fetchGiftSearchResults(context, baseUrl, requestBody);
+	}
+
+	const paginationMode = pagination.paginationMode || 'off';
+
+	// Create the fetch function for pagination
+	const fetchFunction = async (skipParam: number, takeParam: number) => {
+		const paginatedBody = {
+			...requestBody,
+			skip: skipParam,
+			take: takeParam,
+		};
+		return await fetchGiftSearchResults(context, baseUrl, paginatedBody);
+	};
+
+	// Handle different pagination modes
+	switch (paginationMode) {
+		case 'off':
+			const take = pagination.take || 50;
+			const paginatedBody = {
+				...requestBody,
+				take,
+				skip: 0
+			};
+			const results = await fetchGiftSearchResults(context, baseUrl, paginatedBody);
+			return {
+				searchResults: results,
+				filters: filters,
+			};
+
+		case 'automatic':
+			const internalBatchSize = pagination.internalBatchSize || 100;
+			const maxPages = pagination.maxPages || 10;
+			return await handleAutomaticPagination(context, fetchFunction, internalBatchSize, maxPages);
+
+		case 'automaticBatched':
+			const batchSize = pagination.batchSize || 50;
+			const internalBatchSizeBatched = pagination.internalBatchSize || 100;
+			const maxPagesBatched = pagination.maxPages || 10;
+
+			const allResults = await handleAutomaticPagination(context, fetchFunction, internalBatchSizeBatched, maxPagesBatched);
+
+			// Group results into batches
+			const batches = [];
+			for (let i = 0; i < allResults.length; i += batchSize) {
+				const batch = allResults.slice(i, i + batchSize);
+				batches.push({
+					searchResults: batch,
+					filters: filters,
+					batch: {
+						number: Math.floor(i / batchSize) + 1,
+						size: batch.length,
+						total: allResults.length,
+						isLast: i + batchSize >= allResults.length
+					}
+				});
+			}
+			return batches;
+
+		case 'pageByPage':
+			const pageTake = pagination.take || 50;
+			const pageSkip = pagination.skip || 0;
+			const pagePaginatedBody = {
+				...requestBody,
+				take: pageTake,
+				skip: pageSkip
+			};
+			const pageResults = await fetchGiftSearchResults(context, baseUrl, pagePaginatedBody);
+
+			return {
+				searchResults: pageResults,
+				filters: filters,
+				pagination: {
+					currentPage: Math.floor(pageSkip / pageTake) + 1,
+					pageSize: pageTake,
+					skip: pageSkip,
+					returned: pageResults.length,
+					hasMore: pageResults.length === pageTake,
+					nextSkip: pageSkip + pageTake
+				}
+			};
+
+		default:
+			// Fallback to simple fetch
+			const defaultBody = {
+				...requestBody,
+				take: 50,
+				skip: 0
+			};
+			const defaultResults = await fetchGiftSearchResults(context, baseUrl, defaultBody);
+			return {
+				searchResults: defaultResults,
+				filters: filters,
+			};
+	}
+}
+
+// Helper function to make the actual gift search API request
+async function fetchGiftSearchResults(
+	context: IExecuteFunctions,
+	baseUrl: string,
+	requestBody: any
+): Promise<any[]> {
 	const requestOptions: IRequestOptions = {
 		method: 'POST',
 		url: `${baseUrl}/api/Gift/Query`,
@@ -748,12 +1065,6 @@ async function searchGifts(context: IExecuteFunctions, itemIndex: number): Promi
 		requestOptions
 	);
 
-	// Handle different response formats
-	if (pagination === 'batched' && Array.isArray(response)) {
-		return response;
-	} else if (response && typeof response === 'object' && !Array.isArray(response)) {
-		return [response];
-	}
-
-	return response;
+	// Extract gifts from response and ensure we return an array for pagination
+	return extractGiftsFromResponse(response);
 }

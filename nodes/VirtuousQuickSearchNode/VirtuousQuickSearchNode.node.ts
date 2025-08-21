@@ -10,8 +10,13 @@ import {
 	VIRTUOUS_ICON,
 	getBaseUrlFromCredentials,
 	handleAutomaticPagination,
-	paginationOptions,
 	normalizeResponse,
+	createBatchSizeParameter,
+	createInternalBatchSizeParameter,
+	createMaxPagesParameter,
+	createPaginationModeParameter,
+	createSkipParameter,
+	createTakeParameter,
 } from '../../utils/VirtuousUtils';
 
 export class VirtuousQuickSearchNode implements INodeType {
@@ -85,38 +90,33 @@ export class VirtuousQuickSearchNode implements INodeType {
 			},
 			// Pagination Settings
 			{
-				displayName: 'Pagination Mode',
-				name: 'paginationMode',
-				type: 'options',
-				options: paginationOptions,
-				default: 'off',
-				description: 'How to handle pagination of results',
-			},
-			{
-				displayName: 'Skip (Starting Point)',
-				name: 'skip',
-				type: 'number',
-				typeOptions: {
-					minValue: 0,
-				},
-				default: 0,
-				description: 'Number of records to skip',
-				displayOptions: {
-					hide: {
-						paginationMode: ['automatic'],
+				displayName: 'Pagination',
+				name: 'pagination',
+				type: 'fixedCollection',
+				default: {},
+				placeholder: 'Add Pagination',
+				description: 'Control how search results are returned: all at once, in batches, or page by page. Choose based on your workflow needs.',
+				options: [
+					{
+						displayName: 'Pagination',
+						name: 'pagination',
+						values: [
+							createBatchSizeParameter(),
+							createInternalBatchSizeParameter(),
+							createMaxPagesParameter(),
+							createPaginationModeParameter(),
+							createSkipParameter(),
+							{
+								...createTakeParameter(['off', 'pageByPage']),
+								typeOptions: {
+									minValue: 1,
+									maxValue: 500,
+								},
+								description: 'Number of results to return per page (max 500)',
+							},
+						],
 					},
-				},
-			},
-			{
-				displayName: 'Take (Page Size)',
-				name: 'take',
-				type: 'number',
-				typeOptions: {
-					minValue: 1,
-					maxValue: 500,
-				},
-				default: 10,
-				description: 'Number of records per page (max 500)',
+				],
 			},
 		],
 	};
@@ -154,9 +154,10 @@ export class VirtuousQuickSearchNode implements INodeType {
 async function performQuickSearch(context: IExecuteFunctions, itemIndex: number): Promise<any> {
 	const query = context.getNodeParameter('query', itemIndex) as string;
 	const filterTypes = context.getNodeParameter('filterTypes', itemIndex) as string[];
-	const paginationMode = context.getNodeParameter('paginationMode', itemIndex) as string;
-	const skip = context.getNodeParameter('skip', itemIndex) as number;
-	const take = context.getNodeParameter('take', itemIndex) as number;
+
+	// Get pagination configuration from fixedCollection
+	const paginationConfig = context.getNodeParameter('pagination', itemIndex, {}) as any;
+	const pagination = paginationConfig?.pagination;
 
 	// Get the credentials to determine the base URL
 	const credentials = await context.getCredentials('virtuousApi');
@@ -168,62 +169,116 @@ async function performQuickSearch(context: IExecuteFunctions, itemIndex: number)
 		FilterTypes: filterTypes,
 	};
 
+	// If no pagination is configured, default to 'off' mode
+	if (!pagination) {
+		return await fetchQuickSearchResults(context, baseUrl, requestBody, 0, 50);
+	}
+
+	const paginationMode = pagination.paginationMode || 'off';
+
 	// Create the fetch function for pagination
 	const fetchFunction = async (skipParam: number, takeParam: number) => {
-		const queryParams: any = {
-			skip: skipParam,
-			take: takeParam
-		};
-
-		const requestOptions: IRequestOptions = {
-			method: 'POST',
-			url: `${baseUrl}/api/Search`,
-			qs: queryParams,
-			body: requestBody,
-			json: true,
-		};
-
-		const response = await context.helpers.requestWithAuthentication.call(
-			context,
-			'virtuousApi',
-			requestOptions
-		);
-
-		// Use the shared response normalization utility
-		return normalizeResponse(response);
+		return await fetchQuickSearchResults(context, baseUrl, requestBody, skipParam, takeParam);
 	};
 
 	// Handle different pagination modes
-	if (paginationMode === 'automatic') {
-		return await handleAutomaticPagination(context, fetchFunction, take);
+	switch (paginationMode) {
+		case 'off':
+			const take = pagination.take || 50;
+			const results = await fetchQuickSearchResults(context, baseUrl, requestBody, 0, take);
+			return {
+				searchResults: results,
+				searchQuery: query,
+				filterTypes: filterTypes,
+			};
+
+		case 'automatic':
+			const internalBatchSize = pagination.internalBatchSize || 100;
+			const maxPages = pagination.maxPages || 10;
+			return await handleAutomaticPagination(context, fetchFunction, internalBatchSize, maxPages);
+
+		case 'automaticBatched':
+			const batchSize = pagination.batchSize || 50;
+			const internalBatchSizeBatched = pagination.internalBatchSize || 100;
+			const maxPagesBatched = pagination.maxPages || 10;
+
+			const allResults = await handleAutomaticPagination(context, fetchFunction, internalBatchSizeBatched, maxPagesBatched);
+
+			// Group results into batches
+			const batches = [];
+			for (let i = 0; i < allResults.length; i += batchSize) {
+				const batch = allResults.slice(i, i + batchSize);
+				batches.push({
+					searchResults: batch,
+					searchQuery: query,
+					filterTypes: filterTypes,
+					batch: {
+						number: Math.floor(i / batchSize) + 1,
+						size: batch.length,
+						total: allResults.length,
+						isLast: i + batchSize >= allResults.length
+					}
+				});
+			}
+			return batches;
+
+		case 'pageByPage':
+			const pageTake = pagination.take || 50;
+			const pageSkip = pagination.skip || 0;
+			const pageResults = await fetchQuickSearchResults(context, baseUrl, requestBody, pageSkip, pageTake);
+
+			return {
+				searchResults: pageResults,
+				searchQuery: query,
+				filterTypes: filterTypes,
+				pagination: {
+					currentPage: Math.floor(pageSkip / pageTake) + 1,
+					pageSize: pageTake,
+					skip: pageSkip,
+					returned: pageResults.length,
+					hasMore: pageResults.length === pageTake,
+					nextSkip: pageSkip + pageTake
+				}
+			};
+
+		default:
+			// Fallback to simple fetch
+			const defaultResults = await fetchQuickSearchResults(context, baseUrl, requestBody, 0, 50);
+			return {
+				searchResults: defaultResults,
+				searchQuery: query,
+				filterTypes: filterTypes,
+			};
 	}
+}
 
-	if (paginationMode === 'batched') {
-		const results = await handleAutomaticPagination(context, fetchFunction, take);
-
-		// Return as a single batch with metadata
-		return {
-			searchResults: results,
-			searchQuery: query,
-			filterTypes: filterTypes,
-			totalResults: results.length,
-		};
-	}
-
-	// For 'off' and 'pageByPage' modes, make a single request
-	const results = await fetchFunction(skip, take);
-
-	return {
-		searchResults: results,
-		searchQuery: query,
-		filterTypes: filterTypes,
-		pagination: {
-			currentPage: Math.floor(skip / take) + 1,
-			pageSize: take,
-			skip: skip,
-			returned: results.length,
-			hasMore: results.length === take,
-			nextSkip: skip + take
-		}
+// Helper function to make the actual API request
+async function fetchQuickSearchResults(
+	context: IExecuteFunctions,
+	baseUrl: string,
+	requestBody: any,
+	skip: number,
+	take: number
+): Promise<any[]> {
+	const queryParams: any = {
+		skip,
+		take
 	};
+
+	const requestOptions: IRequestOptions = {
+		method: 'POST',
+		url: `${baseUrl}/api/Search`,
+		qs: queryParams,
+		body: requestBody,
+		json: true,
+	};
+
+	const response = await context.helpers.requestWithAuthentication.call(
+		context,
+		'virtuousApi',
+		requestOptions
+	);
+
+	// Use the shared response normalization utility
+	return normalizeResponse(response);
 }

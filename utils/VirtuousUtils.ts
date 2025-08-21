@@ -1,4 +1,4 @@
-import type { IExecuteFunctions, IRequestOptions } from 'n8n-workflow';
+import type { IExecuteFunctions } from 'n8n-workflow';
 
 // Shared constants
 export const VIRTUOUS_ICON = 'file:virtuous-logo-mark.svg';
@@ -18,30 +18,6 @@ export function getBaseUrlFromCredentials(credentials: any): string {
 		default:
 			return 'https://apidevlegacy.virtuoussoftware.com';
 	}
-}
-
-// Generic function to make authenticated API requests
-export async function makeAuthenticatedRequest(
-	context: IExecuteFunctions,
-	method: 'GET' | 'POST' | 'PUT' | 'DELETE',
-	url: string,
-	body?: any
-): Promise<any> {
-	const requestOptions: IRequestOptions = {
-		method,
-		url,
-		json: true,
-	};
-
-	if (body) {
-		requestOptions.body = body;
-	}
-
-	return await context.helpers.requestWithAuthentication.call(
-		context,
-		'virtuousApi',
-		requestOptions
-	);
 }
 
 // Generic automatic pagination handler
@@ -130,66 +106,170 @@ export function extractGiftsFromResponse(response: any): any[] {
 	return [];
 }
 
-// Common pagination parameter structure
-export const paginationOptions = [
+// Shared pagination options for all Virtuous nodes
+export const PAGINATION_OPTIONS = [
 	{
 		name: 'Off',
 		value: 'off',
-		description: 'Return raw API response (one page only). Use when you want the original response structure or testing queries.',
+		description: 'Return raw API response (one page only). Use when you want the original response structure or are testing queries.',
 	},
 	{
-		name: 'Automatic',
+		name: 'Automatic (All Results)',
 		value: 'automatic',
 		description: 'Fetch ALL results and return each as individual workflow items. Perfect for iterating with other nodes.',
 	},
 	{
-		name: 'Batched',
-		value: 'batched',
-		description: 'Fetch ALL results but group them into batches. Each batch becomes one workflow item with metadata.',
+		name: 'Automatic (Batched)',
+		value: 'automaticBatched',
+		description: 'Fetch ALL results but group them into batches. Each batch becomes one workflow item with metadata. Good for bulk processing.',
 	},
 	{
 		name: 'Page by Page',
 		value: 'pageByPage',
-		description: 'Return exactly one page with navigation info. Use when you need precise control over pagination.',
+		description: 'Return exactly one page with navigation info. Use when you need precise control over pagination or are building custom pagination flows.',
 	},
 ];
 
-// Common take/skip parameter helpers
-export function createTakeParameter(operation: string, paginationField: string) {
+// Helper to create batch size parameter for pagination
+export function createBatchSizeParameter() {
 	return {
-		displayName: 'Take',
-		name: `${operation}TakePaginated`,
+		displayName: 'Batch Size',
+		name: 'batchSize',
 		type: 'number' as const,
-		displayOptions: {
-			show: {
-				operation: [operation],
-				[paginationField]: ['off', 'batched', 'pageByPage'],
-			},
-		},
 		typeOptions: {
 			minValue: 1,
 			maxValue: 1000,
 		},
 		default: 50,
-		description: 'Number of results per page',
+		description: 'Number of results per batch (each batch becomes one workflow item). Use smaller values for more granular processing, larger for efficiency.',
+		displayOptions: {
+			show: {
+				paginationMode: ['automaticBatched'],
+			},
+		},
 	};
 }
 
-export function createSkipParameter(operation: string, paginationField: string) {
+// Helper to create internal batch size parameter for pagination
+export function createInternalBatchSizeParameter() {
 	return {
-		displayName: 'Skip',
-		name: `${operation}SkipPaginated`,
+		displayName: 'Internal Batch Size',
+		name: 'internalBatchSize',
 		type: 'number' as const,
+		typeOptions: {
+			minValue: 10,
+			maxValue: 500,
+		},
+		default: 100,
+		description: 'Number of records to fetch per API call (larger = faster but more memory)',
 		displayOptions: {
 			show: {
-				operation: [operation],
-				[paginationField]: ['off', 'pageByPage'],
+				paginationMode: ['automatic', 'automaticBatched'],
 			},
 		},
+	};
+}
+
+// Helper to create max pages parameter for pagination
+export function createMaxPagesParameter() {
+	return {
+		displayName: 'Max Pages',
+		name: 'maxPages',
+		type: 'number' as const,
+		typeOptions: {
+			minValue: 1,
+			maxValue: 100,
+		},
+		default: 10,
+		description: 'Safety limit for automatic pagination. Set higher if you expect large datasets, lower to prevent timeouts.',
+		displayOptions: {
+			show: {
+				paginationMode: ['automatic', 'automaticBatched'],
+			},
+		},
+	};
+}
+
+// Helper to create pagination mode parameter
+export function createPaginationModeParameter(entityType: string = 'results') {
+	const descriptions = {
+		contacts: 'Fetch ALL contacts and return each as individual workflow items. Perfect for iterating with other nodes (e.g., Gift queries per contact).',
+		gifts: 'Fetch ALL gifts and return each as individual workflow items. Perfect for iterating with other nodes.',
+		results: 'Fetch ALL results and return each as individual workflow items. Perfect for iterating with other nodes.',
+	};
+
+	const batchedDescriptions = {
+		contacts: 'Fetch ALL contacts but group them into batches. Each batch becomes one workflow item with metadata. Good for bulk processing.',
+		gifts: 'Fetch ALL gifts but group them into batches. Each batch becomes one workflow item with metadata. Good for bulk processing.',
+		results: 'Fetch ALL results but group them into batches. Each batch becomes one workflow item with metadata. Good for bulk processing.',
+	};
+
+	return {
+		displayName: 'Pagination Mode',
+		name: 'paginationMode',
+		type: 'options' as const,
+		options: [
+			{
+				name: 'Off',
+				value: 'off',
+				description: 'Return raw API response (one page only per input). Use when you want the original response structure or are testing queries.',
+			},
+			{
+				name: 'Automatic (All Results)',
+				value: 'automatic',
+				description: descriptions[entityType as keyof typeof descriptions] || descriptions.results,
+			},
+			{
+				name: 'Automatic (Batched)',
+				value: 'automaticBatched',
+				description: batchedDescriptions[entityType as keyof typeof batchedDescriptions] || batchedDescriptions.results,
+			},
+			{
+				name: 'Page by Page',
+				value: 'pageByPage',
+				description: 'Return exactly one page with navigation info per input. Use when you need precise control over pagination or are building custom pagination flows.',
+			},
+		],
+		default: 'off',
+		description: 'Choose how to handle large result sets. "Automatic" is best for iterating with other nodes.',
+	};
+}
+
+// Helper to create skip parameter for pagination
+export function createSkipParameter(showModes: string[] = ['pageByPage']) {
+	return {
+		displayName: 'Skip (Starting Point)',
+		name: 'skip',
+		type: 'number' as const,
 		typeOptions: {
 			minValue: 0,
 		},
 		default: 0,
-		description: 'Number of records to skip',
+		description: 'Number of records to skip. Use 0 for first page, 50 for second (if page size=50), etc.',
+		displayOptions: {
+			show: {
+				paginationMode: showModes,
+			},
+		},
+	};
+}
+
+// Helper to create take parameter for pagination
+export function createTakeParameter(showModes: string[] = ['off', 'pageByPage'], customDescription?: string) {
+	return {
+		displayName: 'Take (Page Size)',
+		name: 'take',
+		type: 'number' as const,
+		typeOptions: {
+			minValue: 1,
+			maxValue: 1000,
+		},
+		default: 50,
+		description: customDescription || 'Number of results to return per page. Note: When processing multiple input items, this limit applies to EACH input item separately.',
+		displayOptions: {
+			show: {
+				paginationMode: showModes,
+			},
+		},
 	};
 }

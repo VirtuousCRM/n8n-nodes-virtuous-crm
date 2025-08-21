@@ -11,6 +11,12 @@ import {
 	getBaseUrlFromCredentials,
 	handleAutomaticPagination,
 	extractContactsFromResponse,
+	createBatchSizeParameter,
+	createInternalBatchSizeParameter,
+	createMaxPagesParameter,
+	createPaginationModeParameter,
+	createSkipParameter,
+	createTakeParameter,
 } from '../../utils/VirtuousUtils';
 
 export class VirtuousContactNode implements INodeType {
@@ -1260,6 +1266,35 @@ export class VirtuousContactNode implements INodeType {
 							},
 						],
 					},
+					{
+						displayName: 'Tag',
+						name: 'tag',
+						type: 'fixedCollection',
+						typeOptions: {
+							multipleValues: true,
+						},
+						default: {},
+						values: [
+							{
+								displayName: 'Operator',
+								name: 'operator',
+								type: 'options',
+								options: [
+									{ name: 'Is Any Of', value: 'IsAnyOf' },
+									{ name: 'Is None Of', value: 'IsNoneOf' },
+								],
+								default: 'IsAnyOf',
+							},
+							{
+								displayName: 'Tag Values',
+								name: 'tagValues',
+								type: 'string',
+								default: '',
+								description: 'Comma-separated list of tag names or IDs to match against',
+								placeholder: 'Donor, VIP, Major Gift',
+							},
+						],
+					},
 				],
 			},
 			// Pagination Settings
@@ -1281,139 +1316,22 @@ export class VirtuousContactNode implements INodeType {
 						name: 'pagination',
 						values: [
 							{
-								displayName: 'Batch Size',
-								name: 'batchSize',
-								type: 'number',
-								typeOptions: {
-									minValue: 1,
-									maxValue: 1000,
-								},
-								default: 50,
+								...createBatchSizeParameter(),
 								description: 'Number of contacts per batch (each batch becomes one workflow item). Use smaller values for more granular processing, larger for efficiency.',
-								displayOptions: {
-									show: {
-										paginationMode: ['automaticBatched'],
-									},
-								},
 							},
+							createInternalBatchSizeParameter(),
+							createMaxPagesParameter(),
+							createPaginationModeParameter('contacts'),
+							createSkipParameter(),
 							{
-								displayName: 'Internal Batch Size',
-								name: 'internalBatchSize',
-								type: 'number',
-								typeOptions: {
-									minValue: 10,
-									maxValue: 500,
-								},
-								default: 100,
-								description: 'Number of records to fetch per API call (larger = faster but more memory)',
-								displayOptions: {
-									show: {
-										paginationMode: ['automatic', 'automaticBatched'],
-									},
-								},
-							},
-							{
-								displayName: 'Max Pages',
-								name: 'maxPages',
-								type: 'number',
-								typeOptions: {
-									minValue: 1,
-									maxValue: 100,
-								},
-								default: 10,
-								description: 'Safety limit for automatic pagination. Set higher if you expect large datasets, lower to prevent timeouts.',
-								displayOptions: {
-									show: {
-										paginationMode: ['automatic', 'automaticBatched'],
-									},
-								},
-							},
-							{
-								displayName: 'Pagination Mode',
-								name: 'paginationMode',
-								type: 'options',
-								options: [
-									{
-										name: 'Off',
-										value: 'off',
-										description: 'Return raw API response (one page only). Use when you want the original response structure or are testing queries.',
-									},
-									{
-										name: 'Automatic (All Results)',
-										value: 'automatic',
-										description: 'Fetch ALL contacts and return each as individual workflow items. Perfect for iterating with other nodes (e.g., Gift queries per contact).',
-									},
-									{
-										name: 'Automatic (Batched)',
-										value: 'automaticBatched',
-										description: 'Fetch ALL contacts but group them into batches. Each batch becomes one workflow item with metadata. Good for bulk processing.',
-									},
-									{
-										name: 'Page by Page',
-										value: 'pageByPage',
-										description: 'Return exactly one page with navigation info. Use when you need precise control over pagination or are building custom pagination flows.',
-									},
-								],
-								default: 'off',
-								description: 'Choose how to handle large result sets. "Automatic" is best for iterating with other nodes.',
-							},
-							{
-								displayName: 'Skip (Starting Point)',
-								name: 'skip',
-								type: 'number',
-								typeOptions: {
-									minValue: 0,
-								},
-								default: 0,
-								description: 'Number of records to skip. Use 0 for first page, 50 for second (if page size=50), etc.',
-								displayOptions: {
-									show: {
-										paginationMode: ['pageByPage'],
-									},
-								},
-							},
-							{
-								displayName: 'Take (Page Size)',
-								name: 'take',
-								type: 'number',
-								typeOptions: {
-									minValue: 1,
-									maxValue: 500,
-								},
-								default: 50,
+								...createTakeParameter(['pageByPage']),
 								description: 'Number of records per page (max 500). Includes pagination metadata in response.',
-								displayOptions: {
-									show: {
-										paginationMode: ['pageByPage'],
-									},
+								typeOptions: {
+									minValue: 1,
+									maxValue: 500,
 								},
 							},
 						],
-					},
-				],
-			},
-			// Additional options
-			{
-				displayName: 'Additional Options',
-				name: 'additionalOptions',
-				type: 'collection',
-				default: {},
-				placeholder: 'Add Option',
-				description: 'Extra data to include in the API response. Enable for richer contact information.',
-				options: [
-					{
-						displayName: 'Include Segments',
-						name: 'includeSegments',
-						type: 'boolean',
-						default: false,
-						description: 'Whether to include contact segment/group membership data. Useful for filtering or categorizing contacts.',
-					},
-					{
-						displayName: 'Include Custom Fields',
-						name: 'includeCustomFields',
-						type: 'boolean',
-						default: false,
-						description: 'Whether to include all custom field values for contacts. Required if you need organization-specific data.',
 					},
 				],
 			},
@@ -1503,19 +1421,11 @@ async function getContactById(context: IExecuteFunctions, itemIndex: number): Pr
 
 async function getContactByEmail(context: IExecuteFunctions, itemIndex: number): Promise<any> {
 	const email = context.getNodeParameter('email', itemIndex) as string;
-	const additionalOptions = context.getNodeParameter('additionalOptions', itemIndex) as any;
 	const credentials = await context.getCredentials('virtuousApi');
 	const baseUrl = getBaseUrlFromCredentials(credentials);
 	const queryParams: any = {
 		email: email,
 	};
-
-	if (additionalOptions.includeSegments) {
-		queryParams.includeSegments = 'true';
-	}
-	if (additionalOptions.includeCustomFields) {
-		queryParams.includeCustomFields = 'true';
-	}
 
 	const requestOptions: IRequestOptions = {
 		method: 'GET',
@@ -1534,7 +1444,6 @@ async function getContactByEmail(context: IExecuteFunctions, itemIndex: number):
 async function searchContacts(context: IExecuteFunctions, itemIndex: number): Promise<any> {
 	const searchFilters = context.getNodeParameter('searchFilters', itemIndex) as any;
 	const pagination = context.getNodeParameter('pagination', itemIndex) as any;
-	const additionalOptions = context.getNodeParameter('additionalOptions', itemIndex) as any;
 	const credentials = await context.getCredentials('virtuousApi');
 	const baseUrl = getBaseUrlFromCredentials(credentials);
 
@@ -1554,12 +1463,6 @@ async function searchContacts(context: IExecuteFunctions, itemIndex: number): Pr
 			context,
 			async (skip: number, take: number) => {
 				const queryParams: any = { take, skip };
-				if (additionalOptions.includeSegments) {
-					queryParams.includeSegments = 'true';
-				}
-				if (additionalOptions.includeCustomFields) {
-					queryParams.includeCustomFields = 'true';
-				}
 
 				const requestOptions: IRequestOptions = {
 					method: 'POST',
@@ -1590,12 +1493,6 @@ async function searchContacts(context: IExecuteFunctions, itemIndex: number): Pr
 			context,
 			async (skip: number, take: number) => {
 				const queryParams: any = { take, skip };
-				if (additionalOptions.includeSegments) {
-					queryParams.includeSegments = 'true';
-				}
-				if (additionalOptions.includeCustomFields) {
-					queryParams.includeCustomFields = 'true';
-				}
 
 				const requestOptions: IRequestOptions = {
 					method: 'POST',
@@ -1648,14 +1545,6 @@ async function searchContacts(context: IExecuteFunctions, itemIndex: number): Pr
 			skip: startSkip,
 		};
 
-		// Add additional options to query params
-		if (additionalOptions.includeSegments) {
-			queryParams.includeSegments = 'true';
-		}
-		if (additionalOptions.includeCustomFields) {
-			queryParams.includeCustomFields = 'true';
-		}
-
 		// Build the request body with search filters
 		const requestBody = buildRequestBody(searchFilters);
 
@@ -1702,14 +1591,6 @@ async function searchContacts(context: IExecuteFunctions, itemIndex: number): Pr
 		skip: startSkip,
 	};
 
-	// Add additional options to query params
-	if (additionalOptions.includeSegments) {
-		queryParams.includeSegments = 'true';
-	}
-	if (additionalOptions.includeCustomFields) {
-		queryParams.includeCustomFields = 'true';
-	}
-
 	// Build the request body with search filters
 	const requestBody = buildRequestBody(searchFilters);
 
@@ -1721,11 +1602,13 @@ async function searchContacts(context: IExecuteFunctions, itemIndex: number): Pr
 		json: true,
 	};
 
-	return await context.helpers.requestWithAuthentication.call(
+	const response = await context.helpers.requestWithAuthentication.call(
 		context,
 		'virtuousApi',
 		requestOptions
 	);
+
+	return extractContactsFromResponse(response);
 }
 
 // Helper function for automatic pagination
@@ -1882,6 +1765,29 @@ function buildRequestBody(searchFilters: any): any {
 					condition.value = filter.customDate;
 				} else {
 					condition.value = filter.dateValue;
+				}
+
+				filterGroup.conditions.push(condition);
+			}
+		}
+
+		// Process Tag filters
+		if (searchFilters.tag && searchFilters.tag.length > 0) {
+			// Handle direct array structure (not fixedCollection)
+			const tagFilters = searchFilters.tag;
+
+			for (const filter of tagFilters) {
+				const condition: any = {
+					parameter: 'Tag',
+					operator: filter.operator
+				};
+
+				if (filter.tagValues) {
+					// Split by comma and trim whitespace
+					const tagList = filter.tagValues.split(',').map((tag: string) => tag.trim()).filter((tag: string) => tag.length > 0);
+					condition.values = tagList; // Use 'values' array for Tag parameter
+				} else {
+					condition.values = [];
 				}
 
 				filterGroup.conditions.push(condition);
