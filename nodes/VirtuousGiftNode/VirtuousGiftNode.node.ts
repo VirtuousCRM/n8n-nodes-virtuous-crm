@@ -180,7 +180,10 @@ export class VirtuousGiftNode implements INodeType {
 			{
 				displayName: 'Filters',
 				name: 'filters',
-				type: 'collection',
+				type: 'fixedCollection',
+				typeOptions: {
+					multipleValues: true,
+				},
 				displayOptions: {
 					show: {
 						operation: ['search'],
@@ -261,10 +264,16 @@ export class VirtuousGiftNode implements INodeType {
 					{
 						displayName: 'Contact ID',
 						name: 'contactId',
-						type: 'string',
-						default: '={{ $json.Id || $json.id }}',
-						placeholder: '{{ $json.ID }} or 12345',
-						description: 'Filter by contact ID. Use expressions like {{ $JSON.ID }} or {{ $JSON.ID }} to get from previous node data.',
+						values: [
+							{
+								displayName: 'Value',
+								name: 'value',
+								type: 'string',
+								default: '={{ $json.Id || $json.id }}',
+								placeholder: '{{ $json.ID }} or 12345',
+								description: 'Filter by contact ID. Use expressions like {{ $JSON.ID }} or {{ $JSON.ID }} to get from previous node data.',
+							},
+						],
 					},
 					{
 						displayName: 'Contact Name',
@@ -275,19 +284,19 @@ export class VirtuousGiftNode implements INodeType {
 								name: 'operator',
 								type: 'options',
 								options: [
-									{ name: 'Contains', value: 'Contains' },
-									{ name: 'Ends With', value: 'EndsWith' },
 									{ name: 'Is', value: 'Is' },
+									{ name: 'Contains', value: 'Contains' },
 									{ name: 'Starts With', value: 'StartsWith' },
+									{ name: 'Ends With', value: 'EndsWith' },
 								],
 								default: 'Contains',
 							},
 							{
-								displayName: 'Name Value',
-								name: 'nameValue',
+								displayName: 'Value',
+								name: 'value',
 								type: 'string',
 								default: '',
-								description: 'The contact name to search for',
+								description: 'Contact name to filter by',
 							},
 						],
 					},
@@ -313,87 +322,105 @@ export class VirtuousGiftNode implements INodeType {
 								description: 'Comma-separated list of tag names or IDs to match against',
 								placeholder: 'Donor, VIP, Major Gift',
 							},
+				],
+			},
+			{
+				displayName: 'Create Date',
+				name: 'createDate',
+				values: [
+					{
+						displayName: 'Operator',
+						name: 'operator',
+						type: 'options',
+						options: [
+							{ name: 'After', value: 'After' },
+							{ name: 'Before', value: 'Before' },
+							{ name: 'Between', value: 'Between' },
+							{ name: 'Is', value: 'Is' },
+							{ name: 'On Or After', value: 'OnOrAfter' },
+							{ name: 'On Or Before', value: 'OnOrBefore' },
 						],
+						default: 'After',
 					},
 					{
-						displayName: 'Create Date',
-						name: 'createDate',
-						values: [
-							{
-								displayName: 'Operator',
-								name: 'operator',
-								type: 'options',
-								options: [
-									{ name: 'After', value: 'After' },
-									{ name: 'Before', value: 'Before' },
-									{ name: 'Between', value: 'Between' },
-									{ name: 'Is', value: 'Is' },
-									{ name: 'On Or After', value: 'OnOrAfter' },
-									{ name: 'On Or Before', value: 'OnOrBefore' },
-								],
-								default: 'After',
-							},
-							{
-								displayName: 'Date Value',
-								name: 'dateValue',
-								type: 'options',
-								options: [
-									{ name: '30 Days Ago', value: '30 Days Ago' },
-									{ name: '60 Days Ago', value: '60 Days Ago' },
-									{ name: '7 Days Ago', value: '7 Days Ago' },
-									{ name: '90 Days Ago', value: '90 Days Ago' },
-									{ name: 'Custom Date', value: 'custom' },
-									{ name: 'Last Month', value: 'Last Month' },
-									{ name: 'One Year Ago', value: 'One Year Ago' },
-									{ name: 'This Calendar Year', value: 'This Calendar Year' },
-									{ name: 'Today', value: 'Today' },
-									{ name: 'Yesterday', value: 'Yesterday' },
-								],
-								default: '30 Days Ago',
-								description: 'Select a predefined date or use custom',
-							},
-							{
-								displayName: 'Custom Date',
-								name: 'customDate',
-								type: 'dateTime',
-								default: '',
-								description: 'Custom date for filtering',
-								displayOptions: {
-									show: {
-										dateValue: ['custom'],
-									},
-								},
-							},
+						displayName: 'Date Value',
+						name: 'dateValue',
+						type: 'options',
+						options: [
+							{ name: '30 Days Ago', value: '30 Days Ago' },
+							{ name: '60 Days Ago', value: '60 Days Ago' },
+							{ name: '7 Days Ago', value: '7 Days Ago' },
+							{ name: '90 Days Ago', value: '90 Days Ago' },
+							{ name: 'Custom Date', value: 'custom' },
+							{ name: 'Last Month', value: 'Last Month' },
+							{ name: 'One Year Ago', value: 'One Year Ago' },
+							{ name: 'This Calendar Year', value: 'This Calendar Year' },
+							{ name: 'Today', value: 'Today' },
+							{ name: 'Yesterday', value: 'Yesterday' },
 						],
+						default: '30 Days Ago',
+						description: 'Select a predefined date or use custom',
 					},
+					{
+						displayName: 'Custom Date',
+						name: 'customDate',
+						type: 'dateTime',
+						default: '',
+						description: 'Custom date for filtering',
+						displayOptions: {
+							show: {
+								dateValue: ['custom'],
+							},
+						},
+					},
+				],
+			},
 					{
 						displayName: 'Gift Date From',
 						name: 'giftDateFrom',
-						type: 'dateTime',
-						default: '',
-						description: 'Filter gifts from this date onwards',
+						values: [
+							{
+								displayName: 'Date Value',
+								name: 'dateValue',
+								type: 'dateTime',
+								default: '',
+								description: 'Filter gifts from this date onwards',
+							},
+						],
 					},
 					{
 						displayName: 'Gift Date To',
 						name: 'giftDateTo',
-						type: 'dateTime',
-						default: '',
-						description: 'Filter gifts up to this date',
+						values: [
+							{
+								displayName: 'Date Value',
+								name: 'dateValue',
+								type: 'dateTime',
+								default: '',
+								description: 'Filter gifts up to this date',
+							},
+						],
 					},
 					{
 						displayName: 'Gift Type',
 						name: 'giftType',
-						type: 'options',
-						options: [
-							{ name: 'Cash', value: 'Cash' },
-							{ name: 'Check', value: 'Check' },
-							{ name: 'Credit Card', value: 'Credit Card' },
-							{ name: 'In-Kind', value: 'In-Kind' },
-							{ name: 'Other', value: 'Other' },
-							{ name: 'Stock', value: 'Stock' },
+						values: [
+							{
+								displayName: 'Value',
+								name: 'value',
+								type: 'options',
+								options: [
+									{ name: 'Cash', value: 'Cash' },
+									{ name: 'Check', value: 'Check' },
+									{ name: 'Credit Card', value: 'Credit Card' },
+									{ name: 'In-Kind', value: 'In-Kind' },
+									{ name: 'Other', value: 'Other' },
+									{ name: 'Stock', value: 'Stock' },
+								],
+								default: 'Cash',
+								description: 'Filter by gift type',
+							},
 						],
-						default: 'Cash',
-						description: 'Filter by gift type',
 					},
 					{
 						displayName: 'Last Modified Date',
@@ -449,24 +476,36 @@ export class VirtuousGiftNode implements INodeType {
 					{
 						displayName: 'Maximum Amount',
 						name: 'maximumAmount',
-						type: 'number',
-						typeOptions: {
-							numberPrecision: 2,
-							minValue: 0,
-						},
-						default: 0,
-						description: 'Maximum gift amount',
+						values: [
+							{
+								displayName: 'Value',
+								name: 'value',
+								type: 'number',
+								typeOptions: {
+									numberPrecision: 2,
+									minValue: 0,
+								},
+								default: 0,
+								description: 'Maximum gift amount',
+							},
+						],
 					},
 					{
 						displayName: 'Minimum Amount',
 						name: 'minimumAmount',
-						type: 'number',
-						typeOptions: {
-							numberPrecision: 2,
-							minValue: 0,
-						},
-						default: 0,
-						description: 'Minimum gift amount',
+						values: [
+							{
+								displayName: 'Value',
+								name: 'value',
+								type: 'number',
+								typeOptions: {
+									numberPrecision: 2,
+									minValue: 0,
+								},
+								default: 0,
+								description: 'Minimum gift amount',
+							},
+						],
 					},
 				],
 			},
@@ -755,27 +794,43 @@ async function searchGifts(context: IExecuteFunctions, itemIndex: number): Promi
 	const requestBody: any = {};
 
 	// Add basic filters to request body
-	if (filters.contactId) {
-		const contactIdParam = filters.contactId as string;
+	if (filters.contactId && filters.contactId.length > 0) {
+		const contactIdFilter = filters.contactId[0];
+		const contactIdParam = contactIdFilter.value as string;
 		const contactId = parseInt(contactIdParam, 10);
 		if (!isNaN(contactId)) {
 			requestBody['Contact Id'] = contactId;
 		}
 	}
-	if (filters.giftDateFrom) {
-		requestBody['Gift Date From'] = filters.giftDateFrom;
+	if (filters.giftDateFrom && filters.giftDateFrom.length > 0) {
+		const giftDateFromFilter = filters.giftDateFrom[0];
+		if (giftDateFromFilter.dateValue) {
+			requestBody['Gift Date From'] = giftDateFromFilter.dateValue;
+		}
 	}
-	if (filters.giftDateTo) {
-		requestBody['Gift Date To'] = filters.giftDateTo;
+	if (filters.giftDateTo && filters.giftDateTo.length > 0) {
+		const giftDateToFilter = filters.giftDateTo[0];
+		if (giftDateToFilter.dateValue) {
+			requestBody['Gift Date To'] = giftDateToFilter.dateValue;
+		}
 	}
-	if (filters.giftType) {
-		requestBody['Gift Type'] = filters.giftType;
+	if (filters.giftType && filters.giftType.length > 0) {
+		const giftTypeFilter = filters.giftType[0];
+		if (giftTypeFilter.value) {
+			requestBody['Gift Type'] = giftTypeFilter.value;
+		}
 	}
-	if (filters.minimumAmount) {
-		requestBody['Minimum Amount'] = filters.minimumAmount;
+	if (filters.minimumAmount && filters.minimumAmount.length > 0) {
+		const minimumAmountFilter = filters.minimumAmount[0];
+		if (minimumAmountFilter.value) {
+			requestBody['Minimum Amount'] = minimumAmountFilter.value;
+		}
 	}
-	if (filters.maximumAmount) {
-		requestBody['Maximum Amount'] = filters.maximumAmount;
+	if (filters.maximumAmount && filters.maximumAmount.length > 0) {
+		const maximumAmountFilter = filters.maximumAmount[0];
+		if (maximumAmountFilter.value) {
+			requestBody['Maximum Amount'] = maximumAmountFilter.value;
+		}
 	}
 
 	// Handle Last Modified Date filter (advanced filter structure)
@@ -869,7 +924,7 @@ async function searchGifts(context: IExecuteFunctions, itemIndex: number): Promi
 			const condition: any = {
 				parameter: 'Contact Name',
 				operator: filter.operator,
-				value: filter.nameValue
+				value: filter.value
 			};
 
 			filterGroup.conditions.push(condition);

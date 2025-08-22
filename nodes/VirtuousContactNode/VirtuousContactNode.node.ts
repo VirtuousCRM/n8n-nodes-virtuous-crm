@@ -27,6 +27,15 @@ export class VirtuousContactNode implements INodeType {
 		group: ['input'],
 		version: 1,
 		description: 'Get contact information from Virtuous CRM',
+		codex: {
+			alias: ['CRM', 'Virtuous', 'Contact Management', 'Customer'],
+			categories: ['AI'],
+			subcategories: {
+				AI: ['Tools'],
+				Tools: ['CRM']
+			}
+		},
+		usableAsTool: true,
 		defaults: {
 			name: 'Virtuous Contact',
 		},
@@ -113,7 +122,7 @@ export class VirtuousContactNode implements INodeType {
 				displayName: 'Email Address',
 				name: 'email',
 				type: 'string',
-				required: true,
+				required: false,
 				displayOptions: {
 					show: {
 						operation: ['getByEmail'],
@@ -1818,65 +1827,78 @@ async function updateContact(context: IExecuteFunctions, itemIndex: number): Pro
 	const credentials = await context.getCredentials('virtuousApi');
 	const baseUrl = getBaseUrlFromCredentials(credentials);
 
-	// Build the request body
+	// Build the request body - include fields with actual data, skip empty/null values
 	const requestBody: any = {};
 
-	// Add contact fields if provided
-	if (contactData.contactType !== undefined && contactData.contactType !== '') {
-		requestBody.contactType = contactData.contactType;
+	// Add contact fields - only include if they have meaningful values
+	// ContactType is required for updates, so provide default if not specified
+	requestBody.contactType = contactData.contactType || 'Household';
+	if (contactData.name !== undefined && contactData.name !== null && contactData.name?.trim() !== '') {
+		requestBody.name = contactData.name.trim();
 	}
-	if (contactData.name !== undefined && contactData.name !== '') {
-		requestBody.name = contactData.name;
+	if (contactData.informalName !== undefined && contactData.informalName !== null && contactData.informalName?.trim() !== '') {
+		requestBody.informalName = contactData.informalName.trim();
 	}
-	if (contactData.informalName !== undefined && contactData.informalName !== '') {
-		requestBody.informalName = contactData.informalName;
+	if (contactData.description !== undefined && contactData.description !== null && contactData.description?.trim() !== '') {
+		requestBody.description = contactData.description.trim();
 	}
-	if (contactData.description !== undefined && contactData.description !== '') {
-		requestBody.description = contactData.description;
+	if (contactData.website !== undefined && contactData.website !== null && contactData.website?.trim() !== '') {
+		requestBody.website = contactData.website.trim();
 	}
-	if (contactData.website !== undefined && contactData.website !== '') {
-		requestBody.website = contactData.website;
-	}
-	if (contactData.maritalStatus !== undefined && contactData.maritalStatus !== '') {
+	if (contactData.maritalStatus !== undefined && contactData.maritalStatus !== null && contactData.maritalStatus !== '') {
 		requestBody.maritalStatus = contactData.maritalStatus;
 	}
-	if (contactData.anniversaryMonth !== undefined && contactData.anniversaryMonth !== 0) {
+	if (contactData.anniversaryMonth !== undefined && contactData.anniversaryMonth !== null && contactData.anniversaryMonth !== 0) {
 		requestBody.anniversaryMonth = contactData.anniversaryMonth;
 	}
-	if (contactData.anniversaryDay !== undefined && contactData.anniversaryDay !== 0) {
+	if (contactData.anniversaryDay !== undefined && contactData.anniversaryDay !== null && contactData.anniversaryDay !== 0) {
 		requestBody.anniversaryDay = contactData.anniversaryDay;
 	}
-	if (contactData.anniversaryYear !== undefined && contactData.anniversaryYear !== 0) {
+	if (contactData.anniversaryYear !== undefined && contactData.anniversaryYear !== null && contactData.anniversaryYear !== 0) {
 		requestBody.anniversaryYear = contactData.anniversaryYear;
 	}
-	if (contactData.originSegmentId !== undefined && contactData.originSegmentId !== 0) {
+	if (contactData.originSegmentId !== undefined && contactData.originSegmentId !== null && contactData.originSegmentId !== 0) {
 		requestBody.originSegmentId = contactData.originSegmentId;
 	}
-	if (contactData.isPrivate !== undefined) {
+	if (contactData.isPrivate !== undefined && contactData.isPrivate !== null) {
 		requestBody.isPrivate = contactData.isPrivate;
 	}
 
-	// Process custom fields
+	// Process custom fields - only include fields with actual values
 	if (contactData.customFields && contactData.customFields.field && contactData.customFields.field.length > 0) {
-		requestBody.customFields = contactData.customFields.field.map((field: any) => ({
-			name: field.name,
-			value: field.value,
-			displayName: field.displayName,
+		const validFields = contactData.customFields.field.filter((field: any) =>
+			field.name !== undefined && field.name !== null && field.name?.trim() !== '' &&
+			field.value !== undefined && field.value !== null && field.value?.trim() !== ''
+		).map((field: any) => ({
+			name: field.name.trim(),
+			value: field.value.trim(),
+			displayName: field.displayName?.trim() || field.name.trim(),
 		}));
+
+		if (validFields.length > 0) {
+			requestBody.customFields = validFields;
+		}
 	}
 
-	// Process custom collections
+	// Process custom collections - only include collections with actual data
 	if (contactData.customCollections && contactData.customCollections.collection && contactData.customCollections.collection.length > 0) {
-		requestBody.customCollections = contactData.customCollections.collection.map((collection: any) => ({
-			name: collection.name,
-			fields: collection.fields?.field ? collection.fields.field.map((field: any) => ({
-				name: field.name,
-				value: field.value,
+		const validCollections = contactData.customCollections.collection.filter((collection: any) =>
+			collection.name !== undefined && collection.name !== null && collection.name?.trim() !== ''
+		).map((collection: any) => ({
+			name: collection.name.trim(),
+			fields: collection.fields?.field ? collection.fields.field.filter((field: any) =>
+				field.name !== undefined && field.name !== null && field.name?.trim() !== '' &&
+				field.value !== undefined && field.value !== null && field.value?.trim() !== ''
+			).map((field: any) => ({
+				name: field.name.trim(),
+				value: field.value.trim(),
 			})) : [],
-		}));
-	}
+		})).filter((collection: any) => collection.fields.length > 0);
 
-	const requestOptions: IRequestOptions = {
+		if (validCollections.length > 0) {
+			requestBody.customCollections = validCollections;
+		}
+	}	const requestOptions: IRequestOptions = {
 		method: 'PUT',
 		url: `${baseUrl}/api/Contact/${contactId}`,
 		body: requestBody,
@@ -1904,58 +1926,68 @@ async function createContact(context: IExecuteFunctions, itemIndex: number): Pro
 	// Build the request body
 	const requestBody: any = {};
 
-	// Basic contact data
-	if (contactData.anniversaryDay) requestBody.anniversaryDay = contactData.anniversaryDay;
-	if (contactData.anniversaryMonth) requestBody.anniversaryMonth = contactData.anniversaryMonth;
-	if (contactData.anniversaryYear) requestBody.anniversaryYear = contactData.anniversaryYear;
-	if (contactData.contactType) requestBody.contactType = contactData.contactType;
-	if (contactData.description) requestBody.description = contactData.description;
-	if (contactData.informalName) requestBody.informalName = contactData.informalName;
+	// Basic contact data - only include non-empty/meaningful values
+	if (contactData.anniversaryDay && contactData.anniversaryDay !== 0) requestBody.anniversaryDay = contactData.anniversaryDay;
+	if (contactData.anniversaryMonth && contactData.anniversaryMonth !== 0) requestBody.anniversaryMonth = contactData.anniversaryMonth;
+	if (contactData.anniversaryYear && contactData.anniversaryYear !== 0) requestBody.anniversaryYear = contactData.anniversaryYear;
+
+	// Set default contactType if not provided
+	requestBody.contactType = contactData.contactType || 'Household';
+
+	if (contactData.description && contactData.description.trim() !== '') requestBody.description = contactData.description;
+	if (contactData.informalName && contactData.informalName.trim() !== '') requestBody.informalName = contactData.informalName;
 	if (contactData.isArchived !== undefined) requestBody.isArchived = contactData.isArchived;
 	if (contactData.isPrivate !== undefined) requestBody.isPrivate = contactData.isPrivate;
-	if (contactData.maritalStatus) requestBody.maritalStatus = contactData.maritalStatus;
-	if (contactData.name) requestBody.name = contactData.name;
-	if (contactData.originSegmentId) requestBody.originSegmentId = contactData.originSegmentId;
-	if (contactData.referenceId) requestBody.referenceId = contactData.referenceId;
-	if (contactData.referenceSource) requestBody.referenceSource = contactData.referenceSource;
-	if (contactData.website) requestBody.website = contactData.website;
+	if (contactData.maritalStatus && contactData.maritalStatus !== 'Single') requestBody.maritalStatus = contactData.maritalStatus;
+	if (contactData.name && contactData.name.trim() !== '') requestBody.name = contactData.name;
+	if (contactData.originSegmentId && contactData.originSegmentId !== 0) requestBody.originSegmentId = contactData.originSegmentId;
+	if (contactData.referenceId && contactData.referenceId.trim() !== '') requestBody.referenceId = contactData.referenceId;
+	if (contactData.referenceSource && contactData.referenceSource.trim() !== '') requestBody.referenceSource = contactData.referenceSource;
+	if (contactData.website && contactData.website.trim() !== '') requestBody.website = contactData.website;
 
-	// Contact addresses
+	// Contact addresses - only include if there's actual address data
 	if (contactAddresses.address && contactAddresses.address.length > 0) {
-		requestBody.contactAddresses = contactAddresses.address.map((address: any) => {
+		const validAddresses = contactAddresses.address.filter((address: any) => {
+			// Only include address if it has meaningful data (not just empty strings)
+			return address.address1?.trim() || address.city?.trim() || address.postal?.trim() || address.stateCode?.trim();
+		}).map((address: any) => {
 			const addressObj: any = {};
-			if (address.address1) addressObj.address1 = address.address1;
-			if (address.address2) addressObj.address2 = address.address2;
-			if (address.city) addressObj.city = address.city;
-			if (address.countryCode) addressObj.countryCode = address.countryCode;
+			if (address.address1?.trim()) addressObj.address1 = address.address1.trim();
+			if (address.address2?.trim()) addressObj.address2 = address.address2.trim();
+			if (address.city?.trim()) addressObj.city = address.city.trim();
+			if (address.countryCode?.trim()) addressObj.countryCode = address.countryCode.trim();
 			if (address.isPrimary !== undefined) addressObj.isPrimary = address.isPrimary;
-			if (address.label) addressObj.label = address.label;
-			if (address.latitude) addressObj.latitude = address.latitude;
-			if (address.longitude) addressObj.longitude = address.longitude;
-			if (address.postal) addressObj.postal = address.postal;
-			if (address.stateCode) addressObj.stateCode = address.stateCode;
+			if (address.label?.trim()) addressObj.label = address.label.trim();
+			if (address.latitude && address.latitude !== 0) addressObj.latitude = address.latitude;
+			if (address.longitude && address.longitude !== 0) addressObj.longitude = address.longitude;
+			if (address.postal?.trim()) addressObj.postal = address.postal.trim();
+			if (address.stateCode?.trim()) addressObj.stateCode = address.stateCode.trim();
 			return addressObj;
 		});
+
+		if (validAddresses.length > 0) {
+			requestBody.contactAddresses = validAddresses;
+		}
 	}
 
-	// Contact individuals
+	// Contact individuals - clean up empty fields
 	if (contactIndividuals.individual && contactIndividuals.individual.length > 0) {
 		requestBody.contactIndividuals = contactIndividuals.individual.map((individual: any, index: number) => {
 			const individualObj: any = {};
-			if (individual.approximateAge) individualObj.approximateAge = individual.approximateAge;
-			if (individual.birthDay) individualObj.birthDay = individual.birthDay;
-			if (individual.birthMonth) individualObj.birthMonth = individual.birthMonth;
-			if (individual.birthYear) individualObj.birthYear = individual.birthYear;
-			if (individual.firstName) individualObj.firstName = individual.firstName;
-			if (individual.gender) individualObj.gender = individual.gender;
+			if (individual.approximateAge && individual.approximateAge !== 0) individualObj.approximateAge = individual.approximateAge;
+			if (individual.birthDay && individual.birthDay !== 0) individualObj.birthDay = individual.birthDay;
+			if (individual.birthMonth && individual.birthMonth !== 0) individualObj.birthMonth = individual.birthMonth;
+			if (individual.birthYear && individual.birthYear !== 0) individualObj.birthYear = individual.birthYear;
+			if (individual.firstName?.trim()) individualObj.firstName = individual.firstName.trim();
+			if (individual.gender && individual.gender !== 'Other') individualObj.gender = individual.gender;
 			if (individual.isDeceased !== undefined) individualObj.isDeceased = individual.isDeceased;
 			if (individual.isPrimary !== undefined) individualObj.isPrimary = individual.isPrimary;
 			if (individual.isSecondary !== undefined) individualObj.isSecondary = individual.isSecondary;
-			if (individual.lastName) individualObj.lastName = individual.lastName;
-			if (individual.middleName) individualObj.middleName = individual.middleName;
-			if (individual.passion) individualObj.passion = individual.passion;
-			if (individual.prefix) individualObj.prefix = individual.prefix;
-			if (individual.suffix) individualObj.suffix = individual.suffix;
+			if (individual.lastName?.trim()) individualObj.lastName = individual.lastName.trim();
+			if (individual.middleName?.trim()) individualObj.middleName = individual.middleName.trim();
+			if (individual.passion?.trim()) individualObj.passion = individual.passion.trim();
+			if (individual.prefix?.trim()) individualObj.prefix = individual.prefix.trim();
+			if (individual.suffix?.trim()) individualObj.suffix = individual.suffix.trim();
 
 			// Add contact methods for this individual
 			if (contactMethods.method && contactMethods.method.length > 0) {
@@ -1969,7 +2001,7 @@ async function createContact(context: IExecuteFunctions, itemIndex: number): Pro
 						if (method.isOptedIn !== undefined) methodObj.isOptedIn = method.isOptedIn;
 						if (method.isPrimary !== undefined) methodObj.isPrimary = method.isPrimary;
 						if (method.type) methodObj.type = method.type;
-						if (method.value) methodObj.value = method.value;
+						if (method.value?.trim()) methodObj.value = method.value.trim();
 						return methodObj;
 					});
 				}
@@ -1979,24 +2011,38 @@ async function createContact(context: IExecuteFunctions, itemIndex: number): Pro
 		});
 	}
 
-	// Custom collections
+	// Custom collections - only include if they have meaningful data
 	if (customCollections.collection && customCollections.collection.length > 0) {
-		requestBody.customCollections = customCollections.collection.map((collection: any) => ({
-			name: collection.name,
-			fields: collection.fields?.field ? collection.fields.field.map((field: any) => ({
-				name: field.name,
-				value: field.value,
-			})) : [],
+		const validCollections = customCollections.collection.filter((collection: any) =>
+			collection.name?.trim() && collection.fields?.field && collection.fields.field.length > 0
+		).map((collection: any) => ({
+			name: collection.name.trim(),
+			fields: collection.fields.field.filter((field: any) =>
+				field.name?.trim() && field.value?.trim()
+			).map((field: any) => ({
+				name: field.name.trim(),
+				value: field.value.trim(),
+			})),
 		}));
+
+		if (validCollections.length > 0) {
+			requestBody.customCollections = validCollections;
+		}
 	}
 
-	// Custom fields
+	// Custom fields - only include if they have meaningful data
 	if (customFields.field && customFields.field.length > 0) {
-		requestBody.customFields = customFields.field.map((field: any) => ({
-			name: field.name,
-			value: field.value,
-			displayName: field.displayName,
+		const validFields = customFields.field.filter((field: any) =>
+			field.name?.trim() && field.value?.trim()
+		).map((field: any) => ({
+			name: field.name.trim(),
+			value: field.value.trim(),
+			displayName: field.displayName?.trim() || field.name.trim(),
 		}));
+
+		if (validFields.length > 0) {
+			requestBody.customFields = validFields;
+		}
 	}
 
 	const requestOptions: IRequestOptions = {
