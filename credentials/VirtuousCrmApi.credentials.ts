@@ -6,7 +6,7 @@ import type {
 	INodeProperties,
 } from 'n8n-workflow';
 
-export class CrmApi implements ICredentialType {
+export class VirtuousCrmApi implements ICredentialType {
 	name = 'virtuousCrmApi';
 
 	displayName = 'Virtuous CRM API';
@@ -39,7 +39,7 @@ export class CrmApi implements ICredentialType {
 
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: 'apidevlegacy.virtuoussoftware.com',
+			baseURL: 'https://apidevlegacy.virtuoussoftware.com',
 			url: '/api/Organization',
 			method: 'GET',
 		},

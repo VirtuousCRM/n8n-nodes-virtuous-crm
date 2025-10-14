@@ -1,10 +1,6 @@
 import type { INodeProperties } from 'n8n-workflow';
 import { contactTransactionCreateDescription } from './create';
 
-const showOnlyForContact = {
-	resource: ['contactTransaction'],
-};
-
 export const ContactTransactionDescription: INodeProperties[] = [
 	{
 		displayName: 'Operation',
@@ -12,11 +8,13 @@ export const ContactTransactionDescription: INodeProperties[] = [
 		type: 'options',
 		noDataExpression: true,
 		displayOptions: {
-			show: showOnlyForContact,
+			show: {
+				resource: ['contactTransaction'],
+			}
 		},
 		options: [
 			{
-				name: 'Contact Transaction',
+				name: 'Create Contact Transaction',
 						value: 'singleContactTransaction',
 						description: 'Create a Contact that will go through the import process',
 						action: 'Create a contact that will go through the import process',
@@ -30,5 +28,5 @@ export const ContactTransactionDescription: INodeProperties[] = [
 		],
 		default: 'singleContactTransaction',
 	},
-	...contactTransactionCreateDescription
+	...contactTransactionCreateDescription.description.properties
 ];

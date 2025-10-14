@@ -1,6 +1,8 @@
-import { type INodeType, type INodeTypeDescription } from 'n8n-workflow';
+import { NodeConnectionType, type IExecuteFunctions, type INodeExecutionData, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
 import { ContactTransactionDescription } from './resources/contactTransaction';
 import { GiftTransactionDescription } from './resources/giftTransaction';
+import { contactTransactionCreateDescription } from './resources/contactTransaction/create';
+import { giftTransactionCreateDescription } from './resources/giftTransaction/create';
 
 export class VirtuousCrm implements INodeType {
 	description: INodeTypeDescription = {
@@ -23,8 +25,8 @@ export class VirtuousCrm implements INodeType {
 		defaults: {
 			name: 'Virtuous CRM Api Endpoints',
 		},
-		inputs: ['main'],
-		outputs: ['main'],
+		inputs: [NodeConnectionType.Main],
+		outputs: [NodeConnectionType.Main],
 		credentials: [
 			{
 				name: 'virtuousCrmApi',
@@ -32,7 +34,7 @@ export class VirtuousCrm implements INodeType {
 			}
 		],
 		requestDefaults: {
-			baseURL: 'https://api.virtuoussoftware.com',
+			baseURL: 'https://apidevlegacy.virtuoussoftware.com',
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
@@ -60,4 +62,30 @@ export class VirtuousCrm implements INodeType {
 			...GiftTransactionDescription
 		],
 	};
+
+	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
+		const items = this.getInputData();
+		const results: INodeExecutionData[] = [];
+
+		for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
+			const resource = this.getNodeParameter('resource', itemIndex) as string;
+			const operation = this.getNodeParameter('operation', itemIndex) as string;
+
+			let result: any;
+
+			if (resource === 'contactTransaction' && operation === 'singleContactTransaction') {
+				result = await contactTransactionCreateDescription.execute.call(this, itemIndex);
+			} else if (resource === 'giftTransaction' && operation === 'singleGiftTransaction') {
+				result = await giftTransactionCreateDescription.execute.call(this, itemIndex);
+			} else {
+				//throw new Error(`Unsupported resource: ${resource} with operation: ${operation}`);
+			}
+
+			results.push({
+				json: result,
+			});
+		}
+
+		return [results];
+	}
 }
