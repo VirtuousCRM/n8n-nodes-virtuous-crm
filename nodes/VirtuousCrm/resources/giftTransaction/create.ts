@@ -1,4 +1,4 @@
-import { NodeOperationError, type IExecuteFunctions, type INodeProperties } from 'n8n-workflow';
+import { NodeApiError, type IExecuteFunctions, type INodeProperties } from 'n8n-workflow';
 import { virtuousCrmApiRequest } from '../../shared/crmTransport';
 
 export const giftTransactionCreateDescription = {
@@ -195,7 +195,7 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: '',
+				description: 'The birth month of the contact',
 			},
 			{
 				displayName: 'Contact Birth Day',
@@ -209,7 +209,7 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: '',
+				description: 'The birth day of the contact',
 			},
 			{
 				displayName: 'Contact Birth Year',
@@ -223,7 +223,7 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: '',
+				description: 'The birth year of the contact',
 			},
 			{
 				displayName: 'Contact Gender',
@@ -237,14 +237,13 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: '',
+				description: 'The gender of the contact',
 			},
 			{
 				displayName: 'Contact Email Type',
 				name: 'contactEmailType',
 				type: 'string',
 				default: '',
-				placeholder:'Primary Email',
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -274,7 +273,6 @@ export const giftTransactionCreateDescription = {
 				name: 'contactPhoneType',
 				type: 'string',
 				default: '',
-				placeholder: 'Mobile Phone',
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -390,7 +388,6 @@ export const giftTransactionCreateDescription = {
 				name: 'contactTags',
 				type: 'string',
 				default: '',
-				placeholder: 'tag1;tag2;tag3',
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -398,15 +395,15 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'The tags of the contact',
+				hint: 'The tags of the contact',
+				description: 'The tags of the contact, separated by semicolons. Example: tag1;tag2;tag3; .',
 			},
 
 			{
 				displayName: 'Contact Email Lists',
 				name: 'contactEmailLists',
 				type: 'json',
-				default: '',
-				placeholder: '["list1", "list2", "list3"]',
+				default: '[]',
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -414,7 +411,8 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'The email lists of the contact',
+				description: 'Example: ["list1", "list2", "list3"]',
+				hint: 'Provide a JSON array of email list names.'
 			},
 			{
 				displayName: 'Gift Date',
@@ -457,8 +455,7 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description:
-					'The type of the gift transaction. Examples: Cash, Check, Credit, EFT, NonCash, Stock, Other, ReversingTransaction, Cryptocoin, Pledge, PayPal',
+				description: 'The type of the gift transaction. Examples: Cash, Check, Credit, EFT, NonCash, Stock, Other, ReversingTransaction, Cryptocoin, Pledge, PayPal.',
 			},
 			{
 				displayName: 'Gift Amount',
@@ -493,6 +490,7 @@ export const giftTransactionCreateDescription = {
 				displayName: 'Exchange Rate',
 				name: 'giftExchangeRate',
 				type: 'number',
+				default: 0,
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -528,7 +526,6 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'The recurring gift transaction ID',
 			},
 			{
 				displayName: 'Recurring Gift Transaction Update',
@@ -702,6 +699,7 @@ export const giftTransactionCreateDescription = {
 				displayName: 'Tribute ID',
 				name: 'tributeId',
 				type: 'number',
+				default: 0,
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -786,6 +784,7 @@ export const giftTransactionCreateDescription = {
 				displayName: 'Acknowledgee Individual ID',
 				name: 'acknowledgeeIndividualId',
 				type: 'number',
+				default: 0,
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -968,6 +967,7 @@ export const giftTransactionCreateDescription = {
 				displayName: 'Non-Cash Gift Type ID',
 				name: 'nonCashGiftTypeId',
 				type: 'number',
+				default: 0,
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -1023,6 +1023,7 @@ export const giftTransactionCreateDescription = {
 				displayName: 'Stock Number of Shares',
 				name: 'stockNumberOfShares',
 				type: 'number',
+				default: 0,
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -1064,21 +1065,7 @@ export const giftTransactionCreateDescription = {
 				displayName: 'Gift Designations',
 				name: 'designations',
 				type: 'json',
-				default: '',
-				placeholder: `[
-        {
-            "id": "<integer>",
-            "name": "<string>",
-            "code": "<string>",
-            "amountDesignated": "<string>"
-        },
-        {
-            "id": "<integer>",
-            "name": "<string>",
-            "code": "<string>",
-            "amountDesignated": "<string>"
-        }
-    ]`,
+				default: '[]',
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -1086,27 +1073,16 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'Gift designations for the gift transaction',
+				description: 'Example: [{"ID": &lt;integer&gt;, "name": &lt;string&gt;, "code": &lt;string&gt;, "amountDesignated": &lt;string&gt;}, {"ID": &lt;integer&gt;, "name": &lt;string&gt;, "code": &lt;string&gt;, "amountDesignated": &lt;string&gt;}]',
+				hint: 'Provide a JSON array of gift designation objects.'
 			},
 			{
 				displayName: 'Gift Premiums',
 				name: 'premiums',
 				type: 'json',
-				default: '',
-				placeholder: `[
-        {
-            "id": "<integer>",
-            "name": "<string>",
-            "code": "<string>",
-            "quantity": "<string>"
-        },
-        {
-            "id": "<integer>",
-            "name": "<string>",
-            "code": "<string>",
-            "quantity": "<string>"
-        }
-    ]`,
+				default: '[]',
+				hint: 'Provide a JSON array of gift premium objects.',
+				description: 'Example: [{"ID": &lt;integer&gt;, "name": &lt;string&gt;, "code": &lt;string&gt;, "quantity": &lt;string&gt;}, {"ID": &lt;integer&gt;, "name": &lt;string&gt;, "code": &lt;string&gt;, "quantity": &lt;string&gt;}]',
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -1114,17 +1090,12 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'Gift premiums for the gift transaction',
 			},
 			{
 				displayName: 'Custom Fields',
 				name: 'customFields',
 				type: 'json',
-				default: '',
-				placeholder: `{
-        "fieldName": "fieldValue",
-        "fieldName2": "fieldValue2"
-    }`,
+				default: '{}',
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -1132,41 +1103,14 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'Custom fields for the gift transaction',
+				description:'Example: {"fieldName": "fieldValue", "fieldName2": "fieldValue2"}',
+				hint: 'Provide a JSON object of key-value pairs for custom fields.',
 			},
 			{
 				displayName: 'Custom Objects',
 				name: 'customObjects',
 				type: 'json',
-				default: '',
-				placeholder: `[
-			{
-            "name": "<string>",
-            "fields": [
-                {
-                    "name": "<string>",
-                    "value": "<string>"
-                },
-                {
-                    "name": "<string>",
-                    "value": "<string>"
-                }
-            ]
-        },
-        {
-            "name": "<string>",
-            "fields": [
-                {
-                    "name": "<string>",
-                    "value": "<string>"
-                },
-                {
-                    "name": "<string>",
-                    "value": "<string>"
-                }
-            ]
-        }
-		]`,
+				default: '[]',
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -1174,12 +1118,14 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'Custom objects for the gift transaction',
+				description: 'Example: [{"name": "&lt;string&gt;", "fields": [{"name": "&lt;string&gt;", "value": "&lt;string&gt;"}]}, {"name": "&lt;string&gt;", "fields": [{"name": "&lt;string&gt;", "value": "&lt;string&gt;"}]}]',
+				hint: 'Provide a JSON array of custom objects with their fields.',
 			},
 			{
 				displayName: 'Contact Individual ID',
 				name: 'contactIndividualId',
 				type: 'number',
+				default: 0,
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -1207,6 +1153,7 @@ export const giftTransactionCreateDescription = {
 				displayName: 'Passthrough Contact ID',
 				name: 'passthroughContactId',
 				type: 'number',
+				default: 0,
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -1519,7 +1466,6 @@ export const giftTransactionCreateDescription = {
 				name: 'passthroughContactTags',
 				type: 'string',
 				default: '',
-				placeholder: 'tag1;tag2;tag3',
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -1528,13 +1474,13 @@ export const giftTransactionCreateDescription = {
 					},
 				},
 				description: 'Passthrough Contact Tags for the gift transaction',
+				hint: 'Multiple tags can be separated by semicolons. Example: tag1;tag2;tag3',
 			},
 			{
 				displayName: 'Passthrough Contact Email Lists',
 				name: 'passthroughContactEmailLists',
 				type: 'json',
-				default: '',
-				placeholder: '["list1", "list2", "list3"]',
+				default: '[]',
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -1542,12 +1488,14 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'Passthrough Contact Email Lists for the gift transaction',
+				description: 'Example: ["list1", "list2", "list3"]',
+				hint: 'Provide a JSON array of email list names for the passthrough contact.',
 			},
 			{
 				displayName: 'Event Attendee Event ID',
 				name: 'eventAttendeeEventId',
 				type: 'number',
+				default: 0,
 				displayOptions: {
 					show: {
 						resource: ['giftTransaction'],
@@ -1569,7 +1517,6 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'Event Attendee Event Name for the gift transaction',
 			},
 			{
 				displayName: 'Event Attendee Invited',
@@ -1583,7 +1530,7 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'Event Attendee Invited for the gift transaction',
+				description: 'Whether the Event Attendee was Invited',
 			},
 			{
 				displayName: 'Event Attendee RSVP',
@@ -1597,7 +1544,7 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'Event Attendee RSVP for the gift transaction',
+				description: 'Whether the Event Attendee RSVPed for the event',
 			},
 			{
 				displayName: 'Event Attendee RSVP Response',
@@ -1611,7 +1558,7 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'Event Attendee RSVP Response for the gift transaction',
+				description: 'Whether the Event Attendee RSVPed for the event',
 			},
 			{
 				displayName: 'Event Attendee Attended',
@@ -1625,7 +1572,7 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'Event Attendee Attended for the gift transaction',
+				description: 'Whether the Event Attendee Attended the event',
 			},
 			{
 				displayName: 'JSON Data',
@@ -1837,7 +1784,7 @@ export const giftTransactionCreateDescription = {
 	cleanFieldsForApi(rawFields: { [key: string]: any }): { [key: string]: any } {
 		const cleanedData: { [key: string]: any } = {};
 
-		// Define default/placeholder values to exclude
+		// Define default values to exclude
 		const defaultValues: { [key: string]: any } = {
 			// JSON array fields with default empty arrays
 			contactEmailLists: '[]',
@@ -1858,9 +1805,15 @@ export const giftTransactionCreateDescription = {
 			eventAttendeeRsvpResponse: false,
 			eventAttendeeAttended: false,
 
-			// String fields with placeholder tags
-			contactTags: 'tag1;tag2;tag3', // from line 414
-			passthroughContactTags: 'tag1;tag2;tag3', // if you have this field
+			// Number fields with 0 defaults
+			giftExchangeRate: 0,
+			tributeId: 0,
+			acknowledgeeIndividualId: 0,
+			nonCashGiftTypeId: 0,
+			stockNumberOfShares: 0,
+			contactIndividualId: 0,
+			passthroughContactId: 0,
+			eventAttendeeEventId: 0,
 		};
 
 		// Helper function to check if value should be excluded
@@ -1870,7 +1823,7 @@ export const giftTransactionCreateDescription = {
 				return true;
 			}
 
-			// Exclude default/placeholder values
+			// Exclude default values
 			if (defaultValues.hasOwnProperty(key) && value === defaultValues[key]) {
 				return true;
 			}
@@ -1902,7 +1855,7 @@ export const giftTransactionCreateDescription = {
 		Object.entries(rawFields).forEach(([key, value]) => {
 			if (!shouldExclude(key, value)) {
 				// Handle special processing for certain fields
-				if (key === 'contactEmailLists' || key === 'passthroughContactEmailLists' || key === 'designations' || key === 'premiums') {
+				if (key === 'contactEmailLists' || key === 'passthroughContactEmailLists' || key === 'designations' || key === 'premiums' || key === 'customObjects') {
 					// Parse JSON string fields that should be arrays
 					try {
 						const parsed = typeof value === 'string' ? JSON.parse(value) : value;
@@ -1916,7 +1869,7 @@ export const giftTransactionCreateDescription = {
 							cleanedData[key] = value;
 						}
 					}
-				} else if (key === 'customFields' || key === 'customObjects') {
+				} else if (key === 'customFields') {
 					// Handle custom fields and objects JSON
 					try {
 						const parsed = typeof value === 'string' ? JSON.parse(value) : value;
@@ -1948,9 +1901,7 @@ export const giftTransactionCreateDescription = {
 			try {
 				bodyData = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
 			} catch (error) {
-				throw new NodeOperationError(this.getNode(), `Invalid JSON: ${error.message}`, {
-					itemIndex,
-				});
+				throw new NodeApiError(this.getNode(), error);
 			}
 		} else {
 			const rawFields = {
@@ -1975,8 +1926,8 @@ export const giftTransactionCreateDescription = {
 					phoneType: this.getNodeParameter('contactPhoneType', itemIndex),
 					phone: this.getNodeParameter('contactPhoneNumber', itemIndex),
 					address: {
-						address1: this.getNodeParameter('contactAddress1', itemIndex),
-						address2: this.getNodeParameter('contactAddress2', itemIndex),
+						address1: this.getNodeParameter('contactAddressLine1', itemIndex),
+						address2: this.getNodeParameter('contactAddressLine2', itemIndex),
 						city: this.getNodeParameter('contactCity', itemIndex),
 						state: this.getNodeParameter('contactState', itemIndex),
 						postal: this.getNodeParameter('contactPostal', itemIndex),
@@ -1993,16 +1944,10 @@ export const giftTransactionCreateDescription = {
 				giftExchangeRate: this.getNodeParameter('giftExchangeRate', itemIndex),
 				frequency: this.getNodeParameter('giftFrequency', itemIndex),
 				recurringGiftTransactionId: this.getNodeParameter('recurringGiftTransactionId', itemIndex),
-				recurringGiftTransactionUpdate: this.getNodeParameter(
-					'recurringGiftTransactionUpdate',
-					itemIndex,
-				),
+				recurringGiftTransactionUpdate: this.getNodeParameter('recurringGiftTransactionUpdate',itemIndex),
 				pledgeFrequency: this.getNodeParameter('pledgeFrequency', itemIndex),
 				pledgeTransactionId: this.getNodeParameter('pledgeTransactionId', itemIndex),
-				pledgeExpectedFullfillmentDate: this.getNodeParameter(
-					'pledgeExpectedFullfillmentDate',
-					itemIndex,
-				),
+				pledgeExpectedFullfillmentDate: this.getNodeParameter('pledgeExpectedFullfillmentDate', itemIndex),
 				batch: this.getNodeParameter('giftBatch', itemIndex),
 				notes: this.getNodeParameter('giftNotes', itemIndex),
 				segment: this.getNodeParameter('giftSegment', itemIndex),
@@ -2100,20 +2045,7 @@ export const giftTransactionCreateDescription = {
 
 			return response;
 		} catch (error: any) {
-			// Create a more user-friendly error message
-			const errorMessage =
-				error.response?.body?.message ||
-				error.response?.body?.error ||
-				error.message ||
-				'Unknown error occurred';
-
-			const statusCode = error.statusCode || error.status || error.response?.status;
-
-			throw new NodeOperationError(
-				this.getNode(),
-				`Virtuous CRM API Error (${statusCode}): ${errorMessage}`,
-				{ itemIndex },
-			);
+			throw new NodeApiError(this.getNode(), error);
 		}
 	},
 };

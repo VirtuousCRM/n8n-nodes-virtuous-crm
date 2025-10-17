@@ -1,4 +1,4 @@
-import { NodeConnectionType, type IExecuteFunctions, type INodeExecutionData, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
+import { NodeConnectionType, NodeOperationError, type IExecuteFunctions, type INodeExecutionData, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
 import { ContactTransactionDescription } from './resources/contactTransaction';
 import { GiftTransactionDescription } from './resources/giftTransaction';
 import { contactTransactionCreateDescription } from './resources/contactTransaction/create';
@@ -33,13 +33,6 @@ export class VirtuousCrm implements INodeType {
 				required: true
 			}
 		],
-		requestDefaults: {
-			baseURL: 'https://apidevlegacy.virtuoussoftware.com',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-			},
-		},
 		properties: [
 			{
 				displayName: 'Resource',
@@ -78,7 +71,7 @@ export class VirtuousCrm implements INodeType {
 			} else if (resource === 'giftTransaction' && operation === 'singleGiftTransaction') {
 				result = await giftTransactionCreateDescription.execute.call(this, itemIndex);
 			} else {
-				//throw new Error(`Unsupported resource: ${resource} with operation: ${operation}`);
+				throw new NodeOperationError(this.getNode(), `The resource "${resource}" with operation "${operation}" is not supported. Please check your node configuration.`);
 			}
 
 			results.push({

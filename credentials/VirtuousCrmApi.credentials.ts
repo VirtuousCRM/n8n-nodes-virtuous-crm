@@ -13,8 +13,7 @@ export class VirtuousCrmApi implements ICredentialType {
 
 	icon: Icon = { light: 'file:../icons/virtuous-logo-mark.svg', dark: 'file:../icons/virtuous-logo-mark.svg' };
 
-	documentationUrl =
-		'https://docs.virtuoussoftware.com/#authentication';
+	documentationUrl = 'https://docs.virtuoussoftware.com/#authentication';
 
 	properties: INodeProperties[] = [
 		{

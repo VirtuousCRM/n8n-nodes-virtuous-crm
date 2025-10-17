@@ -1,8 +1,13 @@
 {
   "name": "n8n-nodes-virtuous-crm",
   "version": "0.1.0",
-  "description": "n8n community node to work with the Virtuous CRM API",
+  "description": "A n8n node for the Virtuous CRM API",
   "keywords": [
+    "api",
+    "virtuous",
+    "virtuous api",
+    "virtuous crm",
+    "virtuous crm api",
     "n8n-community-node-package"
   ],
   "license": "MIT",

@@ -18,12 +18,6 @@ export const ContactTransactionDescription: INodeProperties[] = [
 						value: 'singleContactTransaction',
 						description: 'Create a Contact that will go through the import process',
 						action: 'Create a contact that will go through the import process',
-				routing: {
-					request: {
-						method: 'POST',
-						url: '',
-					},
-				},
 			}
 		],
 		default: 'singleContactTransaction',

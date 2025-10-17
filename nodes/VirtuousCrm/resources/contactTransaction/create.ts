@@ -1,4 +1,4 @@
-import { NodeOperationError, type IExecuteFunctions, type INodeProperties } from 'n8n-workflow';
+import { NodeApiError, type IExecuteFunctions, type INodeProperties } from 'n8n-workflow';
 import { virtuousCrmApiRequest } from '../../shared/crmTransport';
 
 export const contactTransactionCreateDescription = {
@@ -162,8 +162,8 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
-						operation: ['singleGiftTransaction'],
+						resource: ['contactTransaction'],
+						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
 				},
@@ -176,8 +176,8 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
-						operation: ['singleGiftTransaction'],
+						resource: ['contactTransaction'],
+						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
 				},
@@ -190,8 +190,8 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
-						operation: ['singleGiftTransaction'],
+						resource: ['contactTransaction'],
+						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
 				},
@@ -204,8 +204,8 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
-						operation: ['singleGiftTransaction'],
+						resource: ['contactTransaction'],
+						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
 				},
@@ -223,13 +223,12 @@ export const contactTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				placeholder: 'Primary Email',
 				description:
 					'The email type of the contact. Examples: Primary Email, Secondary Email, Home Email, Work Email, Other Email.',
 			},
 			{
 				displayName: 'Email',
-				name: 'email',
+				name: 'contactEmail',
 				type: 'string',
 				default: '',
 				displayOptions: {
@@ -246,7 +245,6 @@ export const contactTransactionCreateDescription = {
 				name: 'phoneType',
 				type: 'string',
 				default: '',
-				placeholder: 'Mobile Phone',
 				displayOptions: {
 					show: {
 						resource: ['contactTransaction'],
@@ -360,6 +358,7 @@ export const contactTransactionCreateDescription = {
 				displayName: 'Event ID',
 				name: 'eventId',
 				type: 'number',
+				default: 0,
 				displayOptions: {
 					show: {
 						resource: ['contactTransaction'],
@@ -367,7 +366,7 @@ export const contactTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'The event ID of the contact',
+				description: 'The event ID for the contact',
 			},
 			{
 				displayName: 'Event Name',
@@ -381,7 +380,7 @@ export const contactTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'The event name of the contact',
+				description: 'The event name for the contact',
 			},
 			{
 				displayName: 'Invited',
@@ -395,7 +394,7 @@ export const contactTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'The invitation of the contact',
+				description: 'Whether the contacted was invited to the event',
 			},
 			{
 				displayName: 'RSVP Response',
@@ -409,7 +408,7 @@ export const contactTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'The rsvp response of the contact',
+				description: 'Whether contact rsvped to the event',
 			},
 			{
 				displayName: 'Attended',
@@ -429,7 +428,7 @@ export const contactTransactionCreateDescription = {
 				displayName: 'Tags',
 				name: 'tags',
 				type: 'string',
-				placeholder: 'tag1;tag2;tag3',
+				default: '',
 				displayOptions: {
 					show: {
 						resource: ['contactTransaction'],
@@ -438,6 +437,7 @@ export const contactTransactionCreateDescription = {
 					},
 				},
 				description: 'The tags of the contact',
+				hint: 'Multiple tags can be separated by semicolons. Example: tag1;tag2;tag3',
 			},
 			{
 				displayName: 'Origin Segment Code',
@@ -458,7 +458,6 @@ export const contactTransactionCreateDescription = {
 				name: 'emailLists',
 				type: 'json',
 				default: '[]',
-				placeholder: '["list1", "list2", "list3"]',
 				displayOptions: {
 					show: {
 						resource: ['contactTransaction'],
@@ -466,13 +465,14 @@ export const contactTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'The email lists associated with the contact',
+				description: 'Example: ["list1", "list2", "list3"]',
+				hint: 'Provide a JSON array of email list names.',
 			},
 			{
 				displayName: 'Custom Fields',
 				name: 'customFields',
 				type: 'json',
-				default: '',
+				default: '{}',
 				displayOptions: {
 					show: {
 						resource: ['contactTransaction'],
@@ -480,13 +480,14 @@ export const contactTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description:
-					'JSON Object. Example: {"fieldName": "fieldValue", "fieldName2": "fieldValue2"}',
+				description:'Example: {"fieldName": "fieldValue", "fieldName2": "fieldValue2"}',
+				hint: 'Provide a JSON object of key-value pairs for custom fields.',
 			},
 			{
 				displayName: 'Custom Objects',
 				name: 'customObjects',
 				type: 'json',
+				default: '[]',
 				displayOptions: {
 					show: {
 						resource: ['contactTransaction'],
@@ -494,35 +495,8 @@ export const contactTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'The custom objects',
-				placeholder: `[
-        {
-            "name": "<string>",
-            "fields": [
-                {
-                    "name": "<string>",
-                    "value": "<string>"
-                },
-                {
-                    "name": "<string>",
-                    "value": "<string>"
-                }
-            ]
-        },
-        {
-            "name": "<string>",
-            "fields": [
-                {
-                    "name": "<string>",
-                    "value": "<string>"
-                },
-                {
-                    "name": "<string>",
-                    "value": "<string>"
-                }
-            ]
-        }
-    ]`,
+				description: 'Example: [{"name": "&lt;string&gt;", "fields": [{"name": "&lt;string&gt;", "value": "&lt;string&gt;"}]}, {"name": "&lt;string&gt;", "fields": [{"name": "&lt;string&gt;", "value": "&lt;string&gt;"}]}]',
+				hint: 'Provide a JSON array of custom objects with their fields.',
 			},
 			{
 				displayName: 'Volunteer Attendances',
@@ -535,21 +509,9 @@ export const contactTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'The volunteer attendances',
-				placeholder: `[
-        {
-            "volunteerOpportunityId": "<integer>",
-            "volunteerOpportunityName": "<string>",
-            "date": "<string>",
-            "hours": "<string>"
-        },
-        {
-            "volunteerOpportunityId": "<integer>",
-            "volunteerOpportunityName": "<string>",
-            "date": "<string>",
-            "hours": "<string>"
-        }
-    ]`,
+				description: 'Example: [{"volunteerOpportunityId": &lt;integer&gt;, "volunteerOpportunityName": "&lt;string&gt;", "date": "&lt;string&gt;", "hours": "&lt;string&gt;"}, {"volunteerOpportunityId": &lt;integer&gt;, "volunteerOpportunityName": "&lt;string&gt;", "date": "&lt;string&gt;", "hours": "&lt;string&gt;"}]',
+				hint: 'Provide a JSON array of volunteer attendance objects.',
+				default: '[]',
 			},
 			{
 				displayName: 'JSON Data',
@@ -658,7 +620,7 @@ export const contactTransactionCreateDescription = {
 	cleanFieldsForApi(rawFields: { [key: string]: any }): { [key: string]: any } {
 		const cleanedData: { [key: string]: any } = {};
 
-		// Define default/placeholder values to exclude
+		// Define default values to exclude
 		const defaultValues: { [key: string]: any } = {
 			// JSON array fields with default empty arrays
 			emailLists: '[]',
@@ -673,9 +635,8 @@ export const contactTransactionCreateDescription = {
 			rsvpResponse: false,
 			attended: false,
 
-			// String fields with placeholder values (note: tags has placeholder, not default)
-			// The tags field uses placeholder: 'tag1;tag2;tag3' but no default value
-			// So empty string will be excluded by the empty string check
+			// Number fields with 0 defaults
+			eventId: 0,
 		};
 
 		// Helper function to check if value should be excluded
@@ -685,7 +646,7 @@ export const contactTransactionCreateDescription = {
 				return true;
 			}
 
-			// Exclude default/placeholder values
+			// Exclude default values
 			if (defaultValues.hasOwnProperty(key) && value === defaultValues[key]) {
 				return true;
 			}
@@ -763,9 +724,7 @@ export const contactTransactionCreateDescription = {
 			try {
 				bodyData = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
 			} catch (error) {
-				throw new NodeOperationError(this.getNode(), `Invalid JSON: ${error.message}`, {
-					itemIndex,
-				});
+				throw new NodeApiError(this.getNode(), error);
 			}
 		} else {
 			const rawFields = {
@@ -783,7 +742,7 @@ export const contactTransactionCreateDescription = {
 				birthYear: this.getNodeParameter('birthYear', itemIndex),
 				gender: this.getNodeParameter('gender', itemIndex),
 				emailType: this.getNodeParameter('emailType', itemIndex),
-				email: this.getNodeParameter('email', itemIndex),
+				email: this.getNodeParameter('contactEmail', itemIndex),
 				phoneType: this.getNodeParameter('phoneType', itemIndex),
 				phone: this.getNodeParameter('phone', itemIndex),
 				address1: this.getNodeParameter('address1', itemIndex),
@@ -818,20 +777,7 @@ export const contactTransactionCreateDescription = {
 			);
 			return response;
 		} catch (error: any) {
-			// Create a more user-friendly error message
-			const errorMessage =
-				error.response?.body?.message ||
-				error.response?.body?.error ||
-				error.message ||
-				'Unknown error occurred';
-
-			const statusCode = error.statusCode || error.status || error.response?.status;
-
-			throw new NodeOperationError(
-				this.getNode(),
-				`Virtuous CRM API Error (${statusCode}): ${errorMessage}`,
-				{ itemIndex },
-			);
+			throw new NodeApiError(this.getNode(), error);
 		}
 	},
 };

@@ -18,12 +18,6 @@ export const GiftTransactionDescription: INodeProperties[] = [
 				value: 'singleGiftTransaction',
 				description: 'Create a Gift that will go through the import process',
 				action: 'Create a gift that will go through the import process',
-				routing: {
-					request: {
-						method: 'POST',
-						url: '',
-					},
-				},
 			},
 		],
 		default: 'singleGiftTransaction',
