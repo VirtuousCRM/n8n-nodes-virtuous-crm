@@ -10,7 +10,7 @@ export const contactTransactionCreateDescription = {
 				type: 'options',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 					},
 				},
@@ -33,7 +33,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -47,7 +47,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -61,7 +61,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -76,7 +76,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -90,7 +90,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -105,7 +105,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -119,7 +119,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -134,7 +134,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -148,7 +148,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -162,7 +162,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -176,7 +176,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -190,7 +190,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -204,7 +204,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -218,7 +218,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -233,7 +233,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -247,7 +247,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -262,7 +262,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -276,7 +276,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -290,7 +290,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -304,7 +304,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -319,7 +319,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -333,7 +333,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -347,7 +347,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -361,7 +361,7 @@ export const contactTransactionCreateDescription = {
 				default: 0,
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -375,7 +375,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -389,7 +389,7 @@ export const contactTransactionCreateDescription = {
 				default: false,
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -403,7 +403,7 @@ export const contactTransactionCreateDescription = {
 				default: false,
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -417,7 +417,7 @@ export const contactTransactionCreateDescription = {
 				default: false,
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -431,7 +431,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -446,7 +446,7 @@ export const contactTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -460,7 +460,7 @@ export const contactTransactionCreateDescription = {
 				default: '[]',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -475,7 +475,7 @@ export const contactTransactionCreateDescription = {
 				default: '{}',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -490,7 +490,7 @@ export const contactTransactionCreateDescription = {
 				default: '[]',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -504,7 +504,7 @@ export const contactTransactionCreateDescription = {
 				type: 'json',
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -602,7 +602,7 @@ export const contactTransactionCreateDescription = {
 }`,
 				displayOptions: {
 					show: {
-						resource: ['contactTransaction'],
+						resource: ['contact'],
 						operation: ['singleContactTransaction'],
 						inputMethod: ['json'],
 					},

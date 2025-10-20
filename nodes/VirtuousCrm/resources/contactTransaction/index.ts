@@ -1,7 +1,7 @@
 import type { INodeProperties } from 'n8n-workflow';
 import { contactTransactionCreateDescription } from './create';
 
-export const ContactTransactionDescription: INodeProperties[] = [
+export const ContactDescription: INodeProperties[] = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -9,7 +9,7 @@ export const ContactTransactionDescription: INodeProperties[] = [
 		noDataExpression: true,
 		displayOptions: {
 			show: {
-				resource: ['contactTransaction'],
+				resource: ['contact'],
 			}
 		},
 		options: [

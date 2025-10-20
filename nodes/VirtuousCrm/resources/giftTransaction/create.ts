@@ -10,7 +10,7 @@ export const giftTransactionCreateDescription = {
 				type: 'options',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 					},
 				},
@@ -33,7 +33,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -47,7 +47,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -61,7 +61,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -75,7 +75,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -89,7 +89,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -103,7 +103,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -118,7 +118,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -133,7 +133,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -147,7 +147,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -162,7 +162,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -176,7 +176,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -190,7 +190,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -204,7 +204,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -218,7 +218,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -232,7 +232,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -246,7 +246,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -261,7 +261,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -275,7 +275,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -290,7 +290,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -304,7 +304,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -318,7 +318,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -332,7 +332,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -347,7 +347,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -361,7 +361,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -375,7 +375,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -390,7 +390,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -406,7 +406,7 @@ export const giftTransactionCreateDescription = {
 				default: '[]',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -421,7 +421,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -435,7 +435,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -450,7 +450,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -465,7 +465,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -479,7 +479,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -493,7 +493,7 @@ export const giftTransactionCreateDescription = {
 				default: 0,
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -507,7 +507,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -521,7 +521,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -534,7 +534,7 @@ export const giftTransactionCreateDescription = {
 				default: false,
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -548,7 +548,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -562,7 +562,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -576,7 +576,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -590,7 +590,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -604,7 +604,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -618,7 +618,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -632,7 +632,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -646,7 +646,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -660,7 +660,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -674,7 +674,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -688,7 +688,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -702,7 +702,7 @@ export const giftTransactionCreateDescription = {
 				default: 0,
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -716,7 +716,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -731,7 +731,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -745,7 +745,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -759,7 +759,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -773,7 +773,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -787,7 +787,7 @@ export const giftTransactionCreateDescription = {
 				default: 0,
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -801,7 +801,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -815,7 +815,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -829,7 +829,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -844,7 +844,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -858,7 +858,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -872,7 +872,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -886,7 +886,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -900,7 +900,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -914,7 +914,7 @@ export const giftTransactionCreateDescription = {
 				default: false,
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -928,7 +928,7 @@ export const giftTransactionCreateDescription = {
 				default: false,
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -942,7 +942,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -956,7 +956,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -970,7 +970,7 @@ export const giftTransactionCreateDescription = {
 				default: 0,
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -984,7 +984,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -998,7 +998,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1012,7 +1012,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1026,7 +1026,7 @@ export const giftTransactionCreateDescription = {
 				default: 0,
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1040,7 +1040,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1054,7 +1054,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1068,7 +1068,7 @@ export const giftTransactionCreateDescription = {
 				default: '[]',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1085,7 +1085,7 @@ export const giftTransactionCreateDescription = {
 				description: 'Example: [{"ID": &lt;integer&gt;, "name": &lt;string&gt;, "code": &lt;string&gt;, "quantity": &lt;string&gt;}, {"ID": &lt;integer&gt;, "name": &lt;string&gt;, "code": &lt;string&gt;, "quantity": &lt;string&gt;}]',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1098,7 +1098,7 @@ export const giftTransactionCreateDescription = {
 				default: '{}',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1113,7 +1113,7 @@ export const giftTransactionCreateDescription = {
 				default: '[]',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1128,7 +1128,7 @@ export const giftTransactionCreateDescription = {
 				default: 0,
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1142,7 +1142,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1156,7 +1156,7 @@ export const giftTransactionCreateDescription = {
 				default: 0,
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1170,7 +1170,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1184,7 +1184,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1199,7 +1199,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1213,7 +1213,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1227,7 +1227,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1241,7 +1241,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1255,7 +1255,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1269,7 +1269,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1283,7 +1283,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1297,7 +1297,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1311,7 +1311,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1325,7 +1325,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1340,7 +1340,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1354,7 +1354,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1369,7 +1369,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1383,7 +1383,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1397,7 +1397,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1412,7 +1412,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1426,7 +1426,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1440,7 +1440,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1454,7 +1454,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1468,7 +1468,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1483,7 +1483,7 @@ export const giftTransactionCreateDescription = {
 				default: '[]',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1498,7 +1498,7 @@ export const giftTransactionCreateDescription = {
 				default: 0,
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1512,7 +1512,7 @@ export const giftTransactionCreateDescription = {
 				default: '',
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1525,7 +1525,7 @@ export const giftTransactionCreateDescription = {
 				default: false,
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1539,7 +1539,7 @@ export const giftTransactionCreateDescription = {
 				default: false,
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1553,7 +1553,7 @@ export const giftTransactionCreateDescription = {
 				default: false,
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1567,7 +1567,7 @@ export const giftTransactionCreateDescription = {
 				default: false,
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['fields'],
 					},
@@ -1766,7 +1766,7 @@ export const giftTransactionCreateDescription = {
 }`,
 				displayOptions: {
 					show: {
-						resource: ['giftTransaction'],
+						resource: ['gift'],
 						operation: ['singleGiftTransaction'],
 						inputMethod: ['json'],
 					},
@@ -1782,7 +1782,6 @@ export const giftTransactionCreateDescription = {
 	 * @returns Cleaned object with only meaningful values
 	 */
 	cleanFieldsForApi(rawFields: { [key: string]: any }): { [key: string]: any } {
-		const cleanedData: { [key: string]: any } = {};
 
 		// Define default values to exclude
 		const defaultValues: { [key: string]: any } = {
@@ -1814,6 +1813,64 @@ export const giftTransactionCreateDescription = {
 			contactIndividualId: 0,
 			passthroughContactId: 0,
 			eventAttendeeEventId: 0,
+		};
+
+		// Helper function to recursively clean nested objects
+		const cleanObject = (obj: any): any => {
+			if (obj === null || obj === undefined) {
+				return obj;
+			}
+
+			if (Array.isArray(obj)) {
+				const cleaned = obj.map(item => cleanObject(item)).filter(item => item !== undefined);
+				return cleaned.length > 0 ? cleaned : undefined;
+			}
+
+			if (typeof obj === 'object') {
+				const cleaned: any = {};
+				for (const [key, value] of Object.entries(obj)) {
+					if (!shouldExclude(key, value)) {
+						// Handle special processing for certain fields
+						if (key === 'contactEmailLists' || key === 'passthroughContactEmailLists' || key === 'designations' || key === 'premiums' || key === 'customObjects') {
+							// Parse JSON string fields that should be arrays
+							try {
+								const parsed = typeof value === 'string' ? JSON.parse(value) : value;
+								// Only include if it's a non-empty array
+								if (Array.isArray(parsed) && parsed.length > 0) {
+									cleaned[key] = parsed;
+								}
+							} catch (e) {
+								// If parsing fails but it's not empty, use original value
+								if (value && value !== '[]' && value !== '') {
+									cleaned[key] = value;
+								}
+							}
+						} else if (key === 'customFields') {
+							// Handle custom fields JSON
+							try {
+								const parsed = typeof value === 'string' ? JSON.parse(value) : value;
+								if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
+									cleaned[key] = parsed;
+								}
+							} catch (e) {
+								// If parsing fails and it's not empty, include it
+								if (value && value !== '{}' && value !== '[]' && value !== '') {
+									cleaned[key] = value;
+								}
+							}
+						} else {
+							// Recursively clean nested objects
+							const cleanedValue = cleanObject(value);
+							if (cleanedValue !== undefined) {
+								cleaned[key] = cleanedValue;
+							}
+						}
+					}
+				}
+				return Object.keys(cleaned).length > 0 ? cleaned : undefined;
+			}
+
+			return obj;
 		};
 
 		// Helper function to check if value should be excluded
@@ -1851,45 +1908,8 @@ export const giftTransactionCreateDescription = {
 			return false;
 		};
 
-		// Only include non-empty, non-default values
-		Object.entries(rawFields).forEach(([key, value]) => {
-			if (!shouldExclude(key, value)) {
-				// Handle special processing for certain fields
-				if (key === 'contactEmailLists' || key === 'passthroughContactEmailLists' || key === 'designations' || key === 'premiums' || key === 'customObjects') {
-					// Parse JSON string fields that should be arrays
-					try {
-						const parsed = typeof value === 'string' ? JSON.parse(value) : value;
-						// Only include if it's a non-empty array
-						if (Array.isArray(parsed) && parsed.length > 0) {
-							cleanedData[key] = parsed;
-						}
-					} catch (e) {
-						// If parsing fails but it's not empty, use original value
-						if (value && value !== '[]' && value !== '') {
-							cleanedData[key] = value;
-						}
-					}
-				} else if (key === 'customFields') {
-					// Handle custom fields and objects JSON
-					try {
-						const parsed = typeof value === 'string' ? JSON.parse(value) : value;
-						if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
-							cleanedData[key] = parsed;
-						}
-					} catch (e) {
-						// If parsing fails and it's not empty, include it
-						if (value && value !== '{}' && value !== '[]' && value !== '') {
-							cleanedData[key] = value;
-						}
-					}
-				} else {
-					// Include the value as-is
-					cleanedData[key] = value;
-				}
-			}
-		});
-
-		return cleanedData;
+		// Use recursive cleaning to handle nested objects
+		return cleanObject(rawFields) || {};
 	},
 
 	async execute(this: IExecuteFunctions, itemIndex: number) {
@@ -1939,9 +1959,9 @@ export const giftTransactionCreateDescription = {
 				giftDate: this.getNodeParameter('giftDate', itemIndex),
 				cancelDate: this.getNodeParameter('cancelDate', itemIndex),
 				giftType: this.getNodeParameter('giftType', itemIndex),
-				giftAmount: this.getNodeParameter('giftAmount', itemIndex),
-				giftCurrencyCode: this.getNodeParameter('giftCurrencyCode', itemIndex),
-				giftExchangeRate: this.getNodeParameter('giftExchangeRate', itemIndex),
+				amount: this.getNodeParameter('giftAmount', itemIndex),
+				CurrencyCode: this.getNodeParameter('giftCurrencyCode', itemIndex),
+				ExchangeRate: this.getNodeParameter('giftExchangeRate', itemIndex),
 				frequency: this.getNodeParameter('giftFrequency', itemIndex),
 				recurringGiftTransactionId: this.getNodeParameter('recurringGiftTransactionId', itemIndex),
 				recurringGiftTransactionUpdate: this.getNodeParameter('recurringGiftTransactionUpdate',itemIndex),

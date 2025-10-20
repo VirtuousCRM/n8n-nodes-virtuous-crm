@@ -1,6 +1,6 @@
 import { NodeConnectionType, NodeOperationError, type IExecuteFunctions, type INodeExecutionData, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
-import { ContactTransactionDescription } from './resources/contactTransaction';
-import { GiftTransactionDescription } from './resources/giftTransaction';
+import { ContactDescription } from './resources/contactTransaction';
+import { GiftDescription } from './resources/giftTransaction';
 import { contactTransactionCreateDescription } from './resources/contactTransaction/create';
 import { giftTransactionCreateDescription } from './resources/giftTransaction/create';
 
@@ -40,19 +40,19 @@ export class VirtuousCrm implements INodeType {
 				type: 'options',
 				options: [
 					{
-						name: 'Contact Transaction',
-						value: 'contactTransaction'
+						name: 'Contact',
+						value: 'contact'
 					},
 					{
-						name: 'Gift Transaction',
-						value: 'giftTransaction',
+						name: 'Gift',
+						value: 'gift',
 					}
 				],
 				noDataExpression: true,
-				default: 'contactTransaction',
+				default: 'contact',
 			},
-			...ContactTransactionDescription,
-			...GiftTransactionDescription
+			...ContactDescription,
+			...GiftDescription
 		],
 	};
 
@@ -66,9 +66,9 @@ export class VirtuousCrm implements INodeType {
 
 			let result: any;
 
-			if (resource === 'contactTransaction' && operation === 'singleContactTransaction') {
+			if (resource === 'contact' && operation === 'singleContactTransaction') {
 				result = await contactTransactionCreateDescription.execute.call(this, itemIndex);
-			} else if (resource === 'giftTransaction' && operation === 'singleGiftTransaction') {
+			} else if (resource === 'gift' && operation === 'singleGiftTransaction') {
 				result = await giftTransactionCreateDescription.execute.call(this, itemIndex);
 			} else {
 				throw new NodeOperationError(this.getNode(), `The resource "${resource}" with operation "${operation}" is not supported. Please check your node configuration.`);

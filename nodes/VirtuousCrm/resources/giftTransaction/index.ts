@@ -1,7 +1,7 @@
 import type { INodeProperties } from 'n8n-workflow';
 import { giftTransactionCreateDescription } from './create';
 
-export const GiftTransactionDescription: INodeProperties[] = [
+export const GiftDescription: INodeProperties[] = [
 	{
 		displayName: 'Operation',
 		name: 'operation',
@@ -9,7 +9,7 @@ export const GiftTransactionDescription: INodeProperties[] = [
 		noDataExpression: true,
 		displayOptions: {
 			show: {
-				resource: ['giftTransaction'],
+				resource: ['gift'],
 			}
 		},
 		options: [
