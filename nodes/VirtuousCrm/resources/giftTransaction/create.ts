@@ -1786,7 +1786,7 @@ export const giftTransactionCreateDescription = {
 		// Define default values to exclude
 		const defaultValues: { [key: string]: any } = {
 			// JSON array fields with default empty arrays
-			contactEmailLists: '[]',
+			emailLists: '[]',
 			passthroughContactEmailLists: '[]',
 			designations: '[]',
 			premiums: '[]',
@@ -1831,7 +1831,7 @@ export const giftTransactionCreateDescription = {
 				for (const [key, value] of Object.entries(obj)) {
 					if (!shouldExclude(key, value)) {
 						// Handle special processing for certain fields
-						if (key === 'contactEmailLists' || key === 'passthroughContactEmailLists' || key === 'designations' || key === 'premiums' || key === 'customObjects') {
+						if (key === 'emailLists' || key === 'passthroughContactEmailLists' || key === 'designations' || key === 'premiums' || key === 'customObjects') {
 							// Parse JSON string fields that should be arrays
 							try {
 								const parsed = typeof value === 'string' ? JSON.parse(value) : value;
