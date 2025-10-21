@@ -1782,134 +1782,114 @@ export const giftTransactionCreateDescription = {
 	 * @returns Cleaned object with only meaningful values
 	 */
 	cleanFieldsForApi(rawFields: { [key: string]: any }): { [key: string]: any } {
+		// Define optional objects that should be excluded if all fields are empty
+		const optionalObjects = ['tributeDedication', 'passthroughContact', 'eventAttendee'];
+		
+		// Define boolean fields that should only be included when true
+		const optionalBooleanFields = ['recurringGiftTransactionUpdate', 'isPrivate', 'isTaxDeductible'];
 
-		// Define default values to exclude
-		const defaultValues: { [key: string]: any } = {
-			// JSON array fields with default empty arrays
-			emailLists: '[]',
-			passthroughContactEmailLists: '[]',
-			designations: '[]',
-			premiums: '[]',
-			customObjects: '[]',
-
-			// JSON object fields with default empty objects
-			customFields: '{}',
-
-			// Boolean fields with false defaults
-			recurringGiftTransactionUpdate: false,
-			isPrivate: false,
-			isTaxDeductible: false,
-			eventAttendeeInvited: false,
-			eventAttendeeRsvp: false,
-			eventAttendeeRsvpResponse: false,
-			eventAttendeeAttended: false,
-
-			// Number fields with 0 defaults
-			giftExchangeRate: 0,
-			tributeId: 0,
-			acknowledgeeIndividualId: 0,
-			nonCashGiftTypeId: 0,
-			stockNumberOfShares: 0,
-			contactIndividualId: 0,
-			passthroughContactId: 0,
-			eventAttendeeEventId: 0,
-		};
-
-		// Helper function to recursively clean nested objects
-		const cleanObject = (obj: any): any => {
-			if (obj === null || obj === undefined) {
-				return obj;
+		// Helper function to check if an object has all null/empty values
+		const isObjectEmpty = (obj: any, objectKey?: string): boolean => {
+			if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
+				return obj === null || obj === undefined || obj === '';
 			}
-
-			if (Array.isArray(obj)) {
-				const cleaned = obj.map(item => cleanObject(item)).filter(item => item !== undefined);
-				return cleaned.length > 0 ? cleaned : undefined;
-			}
-
-			if (typeof obj === 'object') {
-				const cleaned: any = {};
-				for (const [key, value] of Object.entries(obj)) {
-					if (!shouldExclude(key, value)) {
-						// Handle special processing for certain fields
-						if (key === 'emailLists' || key === 'passthroughContactEmailLists' || key === 'designations' || key === 'premiums' || key === 'customObjects') {
-							// Parse JSON string fields that should be arrays
-							try {
-								const parsed = typeof value === 'string' ? JSON.parse(value) : value;
-								// Only include if it's a non-empty array
-								if (Array.isArray(parsed) && parsed.length > 0) {
-									cleaned[key] = parsed;
-								}
-							} catch (e) {
-								// If parsing fails but it's not empty, use original value
-								if (value && value !== '[]' && value !== '') {
-									cleaned[key] = value;
-								}
-							}
-						} else if (key === 'customFields') {
-							// Handle custom fields JSON
-							try {
-								const parsed = typeof value === 'string' ? JSON.parse(value) : value;
-								if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
-									cleaned[key] = parsed;
-								}
-							} catch (e) {
-								// If parsing fails and it's not empty, include it
-								if (value && value !== '{}' && value !== '[]' && value !== '') {
-									cleaned[key] = value;
-								}
-							}
-						} else {
-							// Recursively clean nested objects
-							const cleanedValue = cleanObject(value);
-							if (cleanedValue !== undefined) {
-								cleaned[key] = cleanedValue;
-							}
-						}
-					}
+			
+			return Object.entries(obj).every(([key, value]) => {
+				if (value === '' || value === null || value === undefined) return true;
+				if (Array.isArray(value) && value.length === 0) return true;
+				if (typeof value === 'string' && (value === '[]' || value === '{}')) return true;
+				
+				// For eventAttendee object, treat default boolean values as empty
+				if (objectKey === 'eventAttendee' && typeof value === 'boolean' && value === false) {
+					return true;
 				}
-				return Object.keys(cleaned).length > 0 ? cleaned : undefined;
-			}
-
-			return obj;
+				
+				// For eventAttendee object, treat default number values as empty
+				if (objectKey === 'eventAttendee' && typeof value === 'number' && value === 0) {
+					return true;
+				}
+				
+				if (typeof value === 'object' && value !== null) {
+					return isObjectEmpty(value, key);
+				}
+				return false;
+			});
 		};
 
-		// Helper function to check if value should be excluded
-		const shouldExclude = (key: string, value: any): boolean => {
-			// Exclude empty strings, null, undefined
+		// Helper function to convert empty values to null recursively
+		const convertEmptyToNull = (value: any): any => {
+			// Convert empty strings, null, undefined to null
 			if (value === '' || value === null || value === undefined) {
-				return true;
+				return null;
 			}
 
-			// Exclude default values
-			if (defaultValues.hasOwnProperty(key) && value === defaultValues[key]) {
-				return true;
-			}
-
-			// Exclude empty arrays
+			// Convert empty arrays to null
 			if (Array.isArray(value) && value.length === 0) {
-				return true;
+				return null;
 			}
 
-			// For JSON string fields that are empty arrays or objects
+			// Handle JSON string fields
 			if (typeof value === 'string') {
+				// Convert empty JSON strings to null
+				if (value === '[]' || value === '{}') {
+					return null;
+				}
+				// Try to parse JSON and handle empty objects/arrays
 				try {
 					const parsed = JSON.parse(value);
 					if (
 						(Array.isArray(parsed) && parsed.length === 0) ||
 						(typeof parsed === 'object' && parsed !== null && Object.keys(parsed).length === 0)
 					) {
-						return true;
+						return null;
 					}
+					return parsed;
 				} catch (e) {
-					// Not JSON, continue with other checks
+					// Not JSON, return as-is
+					return value;
 				}
 			}
 
-			return false;
+			// Handle objects and arrays recursively
+			if (typeof value === 'object' && value !== null) {
+				if (Array.isArray(value)) {
+					return value.length === 0 ? null : value.map(convertEmptyToNull);
+				} else {
+					const result: { [key: string]: any } = {};
+					for (const [k, v] of Object.entries(value)) {
+						result[k] = convertEmptyToNull(v);
+					}
+					return result;
+				}
+			}
+
+			return value;
 		};
 
-		// Use recursive cleaning to handle nested objects
-		return cleanObject(rawFields) || {};
+		// Process all fields
+		const cleanedData: { [key: string]: any } = {};
+		for (const [key, value] of Object.entries(rawFields)) {
+			// Check if this is an optional boolean field that should only be included when true
+			if (optionalBooleanFields.includes(key)) {
+				if (value === true) {
+					// Only include boolean fields when they're true
+					cleanedData[key] = value;
+				}
+				// If false, exclude entirely (don't add to cleanedData)
+			} else if (optionalObjects.includes(key)) {
+				// Check if this is an optional object that should be excluded if empty
+				if (!isObjectEmpty(value, key)) {
+					// Only include if the object has meaningful values
+					cleanedData[key] = convertEmptyToNull(value);
+				}
+				// If empty, exclude entirely (don't add to cleanedData)
+			} else {
+				// For all other fields, convert empty values to null but keep the field
+				cleanedData[key] = convertEmptyToNull(value);
+			}
+		}
+
+		return cleanedData;
 	},
 
 	async execute(this: IExecuteFunctions, itemIndex: number) {
@@ -2058,7 +2038,7 @@ export const giftTransactionCreateDescription = {
 			const response = virtuousCrmApiRequest.call(
 				this,
 				'POST',
-				'/api/Gift/Transaction',
+				'/api/v2/Gift/Transaction',
 				{},
 				bodyData,
 			);
