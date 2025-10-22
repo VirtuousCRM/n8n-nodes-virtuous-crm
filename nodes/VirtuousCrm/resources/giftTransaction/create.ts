@@ -1784,7 +1784,7 @@ export const giftTransactionCreateDescription = {
 	cleanFieldsForApi(rawFields: { [key: string]: any }): { [key: string]: any } {
 		// Define optional objects that should be excluded if all fields are empty
 		const optionalObjects = ['tributeDedication', 'passthroughContact', 'eventAttendee'];
-		
+
 		// Define boolean fields that should only be included when true
 		const optionalBooleanFields = ['recurringGiftTransactionUpdate', 'isPrivate', 'isTaxDeductible'];
 
@@ -1793,78 +1793,83 @@ export const giftTransactionCreateDescription = {
 			if (!obj || typeof obj !== 'object' || Array.isArray(obj)) {
 				return obj === null || obj === undefined || obj === '';
 			}
-			
-			return Object.entries(obj).every(([key, value]) => {
-				if (value === '' || value === null || value === undefined) return true;
-				if (Array.isArray(value) && value.length === 0) return true;
-				if (typeof value === 'string' && (value === '[]' || value === '{}')) return true;
-				
-				// For eventAttendee object, treat default boolean values as empty
-				if (objectKey === 'eventAttendee' && typeof value === 'boolean' && value === false) {
-					return true;
-				}
-				
-				// For eventAttendee object, treat default number values as empty
-				if (objectKey === 'eventAttendee' && typeof value === 'number' && value === 0) {
-					return true;
-				}
-				
-				if (typeof value === 'object' && value !== null) {
-					return isObjectEmpty(value, key);
-				}
-				return false;
-			});
+
+		return Object.entries(obj).every(([key, value]) => {
+			if (value === '' || value === null || value === undefined) return true;
+			if (Array.isArray(value) && value.length === 0) return true;
+			if (typeof value === 'string' && (value === '[]' || value === '{}')) return true;
+
+			// Treat 0 as empty
+			if (typeof value === 'number' && value === 0) {
+				return true;
+			}
+
+			// For eventAttendee object, treat default boolean values as empty
+			if (objectKey === 'eventAttendee' && typeof value === 'boolean' && value === false) {
+				return true;
+			}
+
+			if (typeof value === 'object' && value !== null) {
+				return isObjectEmpty(value, key);
+			}
+			return false;
+		});
 		};
 
-		// Helper function to convert empty values to null recursively
-		const convertEmptyToNull = (value: any): any => {
-			// Convert empty strings, null, undefined to null
-			if (value === '' || value === null || value === undefined) {
+	// Helper function to convert empty values to null recursively
+	const convertEmptyToNull = (value: any): any => {
+		// Convert empty strings, null, undefined to null
+		if (value === '' || value === null || value === undefined) {
+			return null;
+		}
+
+		// Convert 0 values to null for number fields
+		if (typeof value === 'number' && value === 0) {
+			return null;
+		}
+
+		// Convert empty arrays to null
+		if (Array.isArray(value) && value.length === 0) {
+			return null;
+		}
+
+		// Handle JSON string fields
+		if (typeof value === 'string') {
+			// Convert empty JSON strings to null
+			if (value === '[]' || value === '{}') {
 				return null;
 			}
-
-			// Convert empty arrays to null
-			if (Array.isArray(value) && value.length === 0) {
-				return null;
-			}
-
-			// Handle JSON string fields
-			if (typeof value === 'string') {
-				// Convert empty JSON strings to null
-				if (value === '[]' || value === '{}') {
+			// Try to parse JSON and handle empty objects/arrays
+			try {
+				const parsed = JSON.parse(value);
+				if (
+					(Array.isArray(parsed) && parsed.length === 0) ||
+					(typeof parsed === 'object' && parsed !== null && Object.keys(parsed).length === 0)
+				) {
 					return null;
 				}
-				// Try to parse JSON and handle empty objects/arrays
-				try {
-					const parsed = JSON.parse(value);
-					if (
-						(Array.isArray(parsed) && parsed.length === 0) ||
-						(typeof parsed === 'object' && parsed !== null && Object.keys(parsed).length === 0)
-					) {
-						return null;
-					}
-					return parsed;
-				} catch (e) {
-					// Not JSON, return as-is
-					return value;
-				}
+				return parsed;
+			} catch (e) {
+				// Not JSON, return as-is
+				return value;
 			}
+		}
 
-			// Handle objects and arrays recursively
-			if (typeof value === 'object' && value !== null) {
-				if (Array.isArray(value)) {
-					return value.length === 0 ? null : value.map(convertEmptyToNull);
-				} else {
-					const result: { [key: string]: any } = {};
-					for (const [k, v] of Object.entries(value)) {
-						result[k] = convertEmptyToNull(v);
-					}
-					return result;
+		// Handle objects and arrays recursively
+		if (typeof value === 'object' && value !== null) {
+			if (Array.isArray(value)) {
+				return value.length === 0 ? null : value.map(convertEmptyToNull);
+			} else {
+				const result: { [key: string]: any } = {};
+				for (const [k, v] of Object.entries(value)) {
+					result[k] = convertEmptyToNull(v);
 				}
+				return result;
 			}
+		}
 
-			return value;
-		};
+		return value;
+	};
 
 		// Process all fields
 		const cleanedData: { [key: string]: any } = {};
