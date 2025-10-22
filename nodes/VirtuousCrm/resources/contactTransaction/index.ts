@@ -15,9 +15,9 @@ export const ContactDescription: INodeProperties[] = [
 		options: [
 			{
 				name: 'Create Contact Transaction',
-						value: 'singleContactTransaction',
-						description: 'Create a Contact that will go through the import process',
-						action: 'Create a contact that will go through the import process',
+				value: 'singleContactTransaction',
+				description: 'Create a Contact that will go through the import process',
+				action: 'Create a contact that will go through the import process',
 			}
 		],
 		default: 'singleContactTransaction',

@@ -1103,7 +1103,7 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description:'Example: {"fieldName": "fieldValue", "fieldName2": "fieldValue2"}',
+				description: 'Example: {"fieldName": "fieldValue", "fieldName2": "fieldValue2"}',
 				hint: 'Provide a JSON object of key-value pairs for custom fields.',
 			},
 			{
@@ -1794,82 +1794,82 @@ export const giftTransactionCreateDescription = {
 				return obj === null || obj === undefined || obj === '';
 			}
 
-		return Object.entries(obj).every(([key, value]) => {
-			if (value === '' || value === null || value === undefined) return true;
-			if (Array.isArray(value) && value.length === 0) return true;
-			if (typeof value === 'string' && (value === '[]' || value === '{}')) return true;
+			return Object.entries(obj).every(([key, value]) => {
+				if (value === '' || value === null || value === undefined) return true;
+				if (Array.isArray(value) && value.length === 0) return true;
+				if (typeof value === 'string' && (value === '[]' || value === '{}')) return true;
 
-			// Treat 0 as empty
-			if (typeof value === 'number' && value === 0) {
-				return true;
-			}
+				// Treat 0 as empty
+				if (typeof value === 'number' && value === 0) {
+					return true;
+				}
 
-			// For eventAttendee object, treat default boolean values as empty
-			if (objectKey === 'eventAttendee' && typeof value === 'boolean' && value === false) {
-				return true;
-			}
+				// For eventAttendee object, treat default boolean values as empty
+				if (objectKey === 'eventAttendee' && typeof value === 'boolean' && value === false) {
+					return true;
+				}
 
-			if (typeof value === 'object' && value !== null) {
-				return isObjectEmpty(value, key);
-			}
-			return false;
-		});
+				if (typeof value === 'object' && value !== null) {
+					return isObjectEmpty(value, key);
+				}
+				return false;
+			});
 		};
 
-	// Helper function to convert empty values to null recursively
-	const convertEmptyToNull = (value: any): any => {
-		// Convert empty strings, null, undefined to null
-		if (value === '' || value === null || value === undefined) {
-			return null;
-		}
-
-		// Convert 0 values to null for number fields
-		if (typeof value === 'number' && value === 0) {
-			return null;
-		}
-
-		// Convert empty arrays to null
-		if (Array.isArray(value) && value.length === 0) {
-			return null;
-		}
-
-		// Handle JSON string fields
-		if (typeof value === 'string') {
-			// Convert empty JSON strings to null
-			if (value === '[]' || value === '{}') {
+		// Helper function to convert empty values to null recursively
+		const convertEmptyToNull = (value: any): any => {
+			// Convert empty strings, null, undefined to null
+			if (value === '' || value === null || value === undefined) {
 				return null;
 			}
-			// Try to parse JSON and handle empty objects/arrays
-			try {
-				const parsed = JSON.parse(value);
-				if (
-					(Array.isArray(parsed) && parsed.length === 0) ||
-					(typeof parsed === 'object' && parsed !== null && Object.keys(parsed).length === 0)
-				) {
+
+			// Convert 0 values to null for number fields
+			if (typeof value === 'number' && value === 0) {
+				return null;
+			}
+
+			// Convert empty arrays to null
+			if (Array.isArray(value) && value.length === 0) {
+				return null;
+			}
+
+			// Handle JSON string fields
+			if (typeof value === 'string') {
+				// Convert empty JSON strings to null
+				if (value === '[]' || value === '{}') {
 					return null;
 				}
-				return parsed;
-			} catch (e) {
-				// Not JSON, return as-is
-				return value;
-			}
-		}
-
-		// Handle objects and arrays recursively
-		if (typeof value === 'object' && value !== null) {
-			if (Array.isArray(value)) {
-				return value.length === 0 ? null : value.map(convertEmptyToNull);
-			} else {
-				const result: { [key: string]: any } = {};
-				for (const [k, v] of Object.entries(value)) {
-					result[k] = convertEmptyToNull(v);
+				// Try to parse JSON and handle empty objects/arrays
+				try {
+					const parsed = JSON.parse(value);
+					if (
+						(Array.isArray(parsed) && parsed.length === 0) ||
+						(typeof parsed === 'object' && parsed !== null && Object.keys(parsed).length === 0)
+					) {
+						return null;
+					}
+					return parsed;
+				} catch (e) {
+					// Not JSON, return as-is
+					return value;
 				}
-				return result;
 			}
-		}
 
-		return value;
-	};
+			// Handle objects and arrays recursively
+			if (typeof value === 'object' && value !== null) {
+				if (Array.isArray(value)) {
+					return value.length === 0 ? null : value.map(convertEmptyToNull);
+				} else {
+					const result: { [key: string]: any } = {};
+					for (const [k, v] of Object.entries(value)) {
+						result[k] = convertEmptyToNull(v);
+					}
+					return result;
+				}
+			}
+
+			return value;
+		};
 
 		// Process all fields
 		const cleanedData: { [key: string]: any } = {};
@@ -1949,7 +1949,7 @@ export const giftTransactionCreateDescription = {
 				ExchangeRate: this.getNodeParameter('giftExchangeRate', itemIndex),
 				frequency: this.getNodeParameter('giftFrequency', itemIndex),
 				recurringGiftTransactionId: this.getNodeParameter('recurringGiftTransactionId', itemIndex),
-				recurringGiftTransactionUpdate: this.getNodeParameter('recurringGiftTransactionUpdate',itemIndex),
+				recurringGiftTransactionUpdate: this.getNodeParameter('recurringGiftTransactionUpdate', itemIndex),
 				pledgeFrequency: this.getNodeParameter('pledgeFrequency', itemIndex),
 				pledgeTransactionId: this.getNodeParameter('pledgeTransactionId', itemIndex),
 				pledgeExpectedFullfillmentDate: this.getNodeParameter('pledgeExpectedFullfillmentDate', itemIndex),

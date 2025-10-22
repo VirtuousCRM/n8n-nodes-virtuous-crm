@@ -38,7 +38,7 @@ export class VirtuousCrmApi implements ICredentialType {
 
 	test: ICredentialTestRequest = {
 		request: {
-			baseURL: 'https://apidevlegacy.virtuoussoftware.com',
+			baseURL: 'https://api.virtuoussoftware.com',
 			url: '/api/Organization',
 			method: 'GET',
 		},

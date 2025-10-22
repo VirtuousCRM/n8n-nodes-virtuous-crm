@@ -19,7 +19,7 @@ export async function virtuousCrmApiRequest(
 		method: method,
 		qs,
 		body,
-		url: `https://apidevlegacy.virtuoussoftware.com${resource}`,
+		url: `https://api.virtuoussoftware.com${resource}`,
 		json: true,
 	};
 
