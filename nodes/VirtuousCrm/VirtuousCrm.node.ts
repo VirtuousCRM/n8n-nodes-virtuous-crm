@@ -13,14 +13,6 @@ export class VirtuousCrm implements INodeType {
 		group: ['input'],
 		version: 1,
 		description: 'Interact with the Virtuous CRM API',
-		codex: {
-			alias: ['CRM', 'Virtuous'],
-			categories: ['AI'],
-			subcategories: {
-				AI: ['Tools'],
-				Tools: ['CRM']
-			}
-		},
 		usableAsTool: true,
 		defaults: {
 			name: 'Virtuous CRM Api Endpoints',

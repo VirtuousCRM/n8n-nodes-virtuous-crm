@@ -37,10 +37,9 @@ Tested locally against n8n 1.115.3
 
 The Contact and Gift Transactions allow users to send data to Virtuous CRM+ to create or update Contacts or Gifts. The creation of records is asynchronous and requires user input on CRM+, so responses will be limited only to headers and status codes. See resources for more information
 
-[Gifts Integration Best Practices](https://support.virtuous.org/hc/en-us/articles/21329138310285-Gifts-Integration-Best-Practices)
-[Contacts Integration Best Practices](https://support.virtuous.org/hc/en-us/articles/21152926831501-Contacts-Integration-Best-Practices)
-
 ## Resources
 
 * [n8n community nodes documentation](https://docs.n8n.io/integrations/#community-nodes)
-* [Virtuous CRM Api Documentation](https://docs.virtuoussoftware.com/)
+* [Virtuous CRM API Documentation](https://docs.virtuoussoftware.com/)
+* [Gifts Integration Best Practices](https://support.virtuous.org/hc/en-us/articles/21329138310285-Gifts-Integration-Best-Practices)
+* [Contacts Integration Best Practices](https://support.virtuous.org/hc/en-us/articles/21152926831501-Contacts-Integration-Best-Practices)
