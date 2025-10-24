@@ -1,5 +1,5 @@
 {
-  "name": "@virtuoussoftware/n8n-nodes-virtuous-software",
+  "name": "@virtuoussoftware/n8n-nodes-virtuous-crm",
   "version": "0.1.0",
   "description": "A n8n node for the Virtuous CRM+ API",
   "keywords": [
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/VirtuousCRM/n8n-nodes"
+    "url": "https://github.com/VirtuousCRM/n8n-nodes-virtuous-crm"
   },
   "engines": {
     "node": ">=20.15"

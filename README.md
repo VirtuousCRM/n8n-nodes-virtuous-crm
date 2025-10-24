@@ -1,6 +1,6 @@
 ![Banner image](https://user-images.githubusercontent.com/10284570/173569848-c624317f-42b1-45a6-ab09-f0ea3c247648.png)
 
-# n8n-nodes-virtuous-software
+# n8n-nodes-virtuous-crm
 
 This is an n8n community node. It lets you use the [Virtuous CRM API](https://docs.virtuoussoftware.com/) in your n8n workflows.
 
@@ -35,9 +35,10 @@ Tested locally against n8n 1.115.3
 
 ## Usage
 
-_This is an optional section. Use it to help users with any difficult or confusing aspects of the node._
+The Contact and Gift Transactions allow users to send data to Virtuous CRM+ to create or update Contacts or Gifts. The creation of records is asynchronous and requires user input on CRM+, so responses will be limited only to headers and status codes. See resources for more information
 
-_By the time users are looking for community nodes, they probably already know n8n basics. But if you expect new users, you can link to the [Try it out](https://docs.n8n.io/try-it-out/) documentation to help them get started._
+[Gifts Integration Best Practices](https://support.virtuous.org/hc/en-us/articles/21329138310285-Gifts-Integration-Best-Practices)
+[Contacts Integration Best Practices](https://support.virtuous.org/hc/en-us/articles/21152926831501-Contacts-Integration-Best-Practices)
 
 ## Resources
 
