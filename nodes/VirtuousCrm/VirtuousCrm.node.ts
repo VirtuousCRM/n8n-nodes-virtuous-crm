@@ -68,6 +68,7 @@ export class VirtuousCrm implements INodeType {
 
 			results.push({
 				json: result,
+				pairedItem: itemIndex
 			});
 		}
 
