@@ -53,23 +53,41 @@ export class VirtuousCrm implements INodeType {
 		const results: INodeExecutionData[] = [];
 
 		for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
-			const resource = this.getNodeParameter('resource', itemIndex) as string;
-			const operation = this.getNodeParameter('operation', itemIndex) as string;
+			try {
+				const resource = this.getNodeParameter('resource', itemIndex) as string;
+				const operation = this.getNodeParameter('operation', itemIndex) as string;
 
-			let result: any;
+				let result: any;
 
-			if (resource === 'contact' && operation === 'singleContactTransaction') {
-				result = await contactTransactionCreateDescription.execute.call(this, itemIndex);
-			} else if (resource === 'gift' && operation === 'singleGiftTransaction') {
-				result = await giftTransactionCreateDescription.execute.call(this, itemIndex);
-			} else {
-				throw new NodeOperationError(this.getNode(), `The resource "${resource}" with operation "${operation}" is not supported. Please check your node configuration.`);
+				if (resource === 'contact' && operation === 'singleContactTransaction') {
+					result = await contactTransactionCreateDescription.execute.call(this, itemIndex);
+				} else if (resource === 'gift' && operation === 'singleGiftTransaction') {
+					result = await giftTransactionCreateDescription.execute.call(this, itemIndex);
+				} else {
+					throw new NodeOperationError(
+						this.getNode(),
+						`The resource "${resource}" with operation "${operation}" is not supported. Please check your node configuration.`,
+					);
+				}
+
+				results.push({
+					json: result,
+					pairedItem: itemIndex,
+				});
+			} catch (error) {
+				if (this.continueOnFail()) {
+					results.push({
+						json: { error: error.message },
+						pairedItem: { item: itemIndex },
+					});
+					continue;
+				}
+
+				throw new NodeOperationError(this.getNode(), error as Error, {
+					description: error.description,
+					itemIndex: itemIndex,
+				});
 			}
-
-			results.push({
-				json: result,
-				pairedItem: itemIndex
-			});
 		}
 
 		return [results];

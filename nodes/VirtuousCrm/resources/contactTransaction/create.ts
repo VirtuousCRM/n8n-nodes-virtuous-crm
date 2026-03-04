@@ -27,77 +27,6 @@ export const contactTransactionCreateDescription = {
 				default: 'fields',
 			},
 			{
-				displayName: 'Reference Source',
-				name: 'referenceSource',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
-					},
-				},
-				description: 'The reference source of the contact',
-			},
-			{
-				displayName: 'Reference ID',
-				name: 'referenceId',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
-					},
-				},
-				description: 'The reference ID of the contact',
-			},
-			{
-				displayName: 'Contact Type',
-				name: 'contactType',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
-					},
-				},
-				description:
-					'The type of contact. Examples: Household, Organization, Foundation. Configurable via CRM.',
-			},
-			{
-				displayName: 'Full Name',
-				name: 'name',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
-					},
-				},
-				description: 'The name of the contact',
-			},
-			{
-				displayName: 'Title',
-				name: 'title',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
-					},
-				},
-				description: 'The title of the contact',
-			},
-			{
 				displayName: 'First Name',
 				name: 'firstName',
 				type: 'string',
@@ -111,20 +40,6 @@ export const contactTransactionCreateDescription = {
 					},
 				},
 				description: 'The first name of the contact',
-			},
-			{
-				displayName: 'Middle Name',
-				name: 'middleName',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
-					},
-				},
-				description: 'The middle name of the contact',
 			},
 			{
 				displayName: 'Last Name',
@@ -142,10 +57,11 @@ export const contactTransactionCreateDescription = {
 				description: 'The last name of the contact',
 			},
 			{
-				displayName: 'Suffix',
-				name: 'suffix',
-				type: 'string',
-				default: '',
+				displayName: 'Additional Fields',
+				name: 'additionalFields',
+				type: 'collection',
+				placeholder: 'Add Field',
+				default: {},
 				displayOptions: {
 					show: {
 						resource: ['contact'],
@@ -153,365 +69,240 @@ export const contactTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'The suffix of the contact',
-			},
-			{
-				displayName: 'Birth Month',
-				name: 'birthMonth',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+				options: [
+					{
+						displayName: 'Address Line 1',
+						name: 'address1',
+						type: 'string',
+						default: '',
+						description: 'The address line 1 of the contact',
 					},
-				},
-				description: 'The birth month of the contact',
-			},
-			{
-				displayName: 'Birth Day',
-				name: 'birthDay',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Address Line 2',
+						name: 'address2',
+						type: 'string',
+						default: '',
+						description: 'The address line 2 of the contact',
 					},
-				},
-				description: 'The birth day of the contact',
-			},
-			{
-				displayName: 'Birth Year',
-				name: 'birthYear',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Attended',
+						name: 'attended',
+						type: 'boolean',
+						default: false,
+						description: 'Whether the contact attended',
 					},
-				},
-				description: 'The birth year of the contact',
-			},
-			{
-				displayName: 'Gender',
-				name: 'gender',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Birth Day',
+						name: 'birthDay',
+						type: 'string',
+						default: '',
+						description: 'The birth day of the contact',
 					},
-				},
-				description: 'The gender of the contact',
-			},
-			{
-				displayName: 'Email Type',
-				name: 'emailType',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Birth Month',
+						name: 'birthMonth',
+						type: 'string',
+						default: '',
+						description: 'The birth month of the contact',
 					},
-				},
-				description:
-					'The email type of the contact. Examples: Primary Email, Secondary Email, Home Email, Work Email, Other Email.',
-			},
-			{
-				displayName: 'Email',
-				name: 'contactEmail',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Birth Year',
+						name: 'birthYear',
+						type: 'string',
+						default: '',
+						description: 'The birth year of the contact',
 					},
-				},
-				description: 'The email of the contact',
-			},
-			{
-				displayName: 'Phone Type',
-				name: 'phoneType',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'City',
+						name: 'city',
+						type: 'string',
+						default: '',
+						description: 'The city of the contact',
 					},
-				},
-				description:
-					'The phone type of the contact. Examples: Home Phone, Mobile Phone, Work Phone, Other Phone.',
-			},
-			{
-				displayName: 'Phone Number',
-				name: 'phone',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Contact Type',
+						name: 'contactType',
+						type: 'string',
+						default: '',
+						description:
+							'The type of contact. Examples: Household, Organization, Foundation. Configurable via CRM.',
 					},
-				},
-				description: 'The phone number of the contact',
-			},
-			{
-				displayName: 'Address Line 1',
-				name: 'address1',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Country',
+						name: 'country',
+						type: 'string',
+						default: '',
+						description: 'The country of the contact',
 					},
-				},
-				description: 'The address line 1 of the contact',
-			},
-			{
-				displayName: 'Address Line 2',
-				name: 'address2',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Custom Fields',
+						name: 'customFields',
+						type: 'json',
+						default: '{}',
+						description: 'Example: {"fieldName": "fieldValue", "fieldName2": "fieldValue2"}',
+						hint: 'Provide a JSON object of key-value pairs for custom fields.',
 					},
-				},
-				description: 'The address line 2 of the contact',
-			},
-			{
-				displayName: 'City',
-				name: 'city',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Custom Objects',
+						name: 'customObjects',
+						type: 'json',
+						default: '[]',
+						description: 'Example: [{"name": "&lt;string&gt;", "fields": [{"name": "&lt;string&gt;", "value": "&lt;string&gt;"}]}]',
+						hint: 'Provide a JSON array of custom objects with their fields.',
 					},
-				},
-				description: 'The city of the contact',
-			},
-
-			{
-				displayName: 'State',
-				name: 'state',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Email',
+						name: 'contactEmail',
+						type: 'string',
+						default: '',
+						description: 'The email of the contact',
 					},
-				},
-				description: 'The state of the contact',
-			},
-			{
-				displayName: 'Postal Code',
-				name: 'postal',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Email Lists',
+						name: 'emailLists',
+						type: 'json',
+						default: '[]',
+						description: 'Example: ["list1", "list2", "list3"]',
+						hint: 'Provide a JSON array of email list names.',
 					},
-				},
-				description: 'The postal code of the contact',
-			},
-			{
-				displayName: 'Country',
-				name: 'country',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Email Type',
+						name: 'emailType',
+						type: 'string',
+						default: '',
+						description:
+							'The email type of the contact. Examples: Primary Email, Secondary Email, Home Email, Work Email, Other Email.',
 					},
-				},
-				description: 'The country of the contact',
-			},
-			{
-				displayName: 'Event ID',
-				name: 'eventId',
-				type: 'number',
-				default: 0,
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Event ID',
+						name: 'eventId',
+						type: 'number',
+						default: 0,
+						description: 'The event ID for the contact',
 					},
-				},
-				description: 'The event ID for the contact',
-			},
-			{
-				displayName: 'Event Name',
-				name: 'eventName',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Event Name',
+						name: 'eventName',
+						type: 'string',
+						default: '',
+						description: 'The event name for the contact',
 					},
-				},
-				description: 'The event name for the contact',
-			},
-			{
-				displayName: 'Invited',
-				name: 'invited',
-				type: 'boolean',
-				default: false,
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Full Name',
+						name: 'name',
+						type: 'string',
+						default: '',
+						description: 'The name of the contact',
 					},
-				},
-				description: 'Whether the contacted was invited to the event',
-			},
-			{
-				displayName: 'RSVP Response',
-				name: 'rsvpResponse',
-				type: 'boolean',
-				default: false,
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Gender',
+						name: 'gender',
+						type: 'string',
+						default: '',
+						description: 'The gender of the contact',
 					},
-				},
-				description: 'Whether contact rsvped to the event',
-			},
-			{
-				displayName: 'Attended',
-				name: 'attended',
-				type: 'boolean',
-				default: false,
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Invited',
+						name: 'invited',
+						type: 'boolean',
+						default: false,
+						description: 'Whether the contacted was invited to the event',
 					},
-				},
-				description: 'Whether the contact attended',
-			},
-			{
-				displayName: 'Tags',
-				name: 'tags',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Middle Name',
+						name: 'middleName',
+						type: 'string',
+						default: '',
+						description: 'The middle name of the contact',
 					},
-				},
-				description: 'The tags of the contact',
-				hint: 'Multiple tags can be separated by semicolons. Example: tag1;tag2;tag3',
-			},
-			{
-				displayName: 'Origin Segment Code',
-				name: 'originSegmentCode',
-				type: 'string',
-				default: '',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Origin Segment Code',
+						name: 'originSegmentCode',
+						type: 'string',
+						default: '',
+						description: 'The origin segment code of the contact',
 					},
-				},
-				description: 'The origin segment code of the contact',
-			},
-			{
-				displayName: 'Email Lists',
-				name: 'emailLists',
-				type: 'json',
-				default: '[]',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Phone Number',
+						name: 'phone',
+						type: 'string',
+						default: '',
+						description: 'The phone number of the contact',
 					},
-				},
-				description: 'Example: ["list1", "list2", "list3"]',
-				hint: 'Provide a JSON array of email list names.',
-			},
-			{
-				displayName: 'Custom Fields',
-				name: 'customFields',
-				type: 'json',
-				default: '{}',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Phone Type',
+						name: 'phoneType',
+						type: 'string',
+						default: '',
+						description:
+							'The phone type of the contact. Examples: Home Phone, Mobile Phone, Work Phone, Other Phone.',
 					},
-				},
-				description:'Example: {"fieldName": "fieldValue", "fieldName2": "fieldValue2"}',
-				hint: 'Provide a JSON object of key-value pairs for custom fields.',
-			},
-			{
-				displayName: 'Custom Objects',
-				name: 'customObjects',
-				type: 'json',
-				default: '[]',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Postal Code',
+						name: 'postal',
+						type: 'string',
+						default: '',
+						description: 'The postal code of the contact',
 					},
-				},
-				description: 'Example: [{"name": "&lt;string&gt;", "fields": [{"name": "&lt;string&gt;", "value": "&lt;string&gt;"}]}, {"name": "&lt;string&gt;", "fields": [{"name": "&lt;string&gt;", "value": "&lt;string&gt;"}]}]',
-				hint: 'Provide a JSON array of custom objects with their fields.',
-			},
-			{
-				displayName: 'Volunteer Attendances',
-				name: 'volunteerAttendances',
-				type: 'json',
-				displayOptions: {
-					show: {
-						resource: ['contact'],
-						operation: ['singleContactTransaction'],
-						inputMethod: ['fields'],
+					{
+						displayName: 'Reference ID',
+						name: 'referenceId',
+						type: 'string',
+						default: '',
+						description: 'The reference ID of the contact',
 					},
-				},
-				description: 'Example: [{"volunteerOpportunityId": &lt;integer&gt;, "volunteerOpportunityName": "&lt;string&gt;", "date": "&lt;string&gt;", "hours": "&lt;string&gt;"}, {"volunteerOpportunityId": &lt;integer&gt;, "volunteerOpportunityName": "&lt;string&gt;", "date": "&lt;string&gt;", "hours": "&lt;string&gt;"}]',
-				hint: 'Provide a JSON array of volunteer attendance objects.',
-				default: '[]',
+					{
+						displayName: 'Reference Source',
+						name: 'referenceSource',
+						type: 'string',
+						default: '',
+						description: 'The reference source of the contact',
+					},
+					{
+						displayName: 'RSVP Response',
+						name: 'rsvpResponse',
+						type: 'boolean',
+						default: false,
+						description: 'Whether contact rsvped to the event',
+					},
+					{
+						displayName: 'State',
+						name: 'state',
+						type: 'string',
+						default: '',
+						description: 'The state of the contact',
+					},
+					{
+						displayName: 'Suffix',
+						name: 'suffix',
+						type: 'string',
+						default: '',
+						description: 'The suffix of the contact',
+					},
+					{
+						displayName: 'Tags',
+						name: 'tags',
+						type: 'string',
+						default: '',
+						description: 'The tags of the contact',
+						hint: 'Multiple tags can be separated by semicolons. Example: tag1;tag2;tag3',
+					},
+					{
+						displayName: 'Title',
+						name: 'title',
+						type: 'string',
+						default: '',
+						description: 'The title of the contact',
+					},
+					{
+						displayName: 'Volunteer Attendances',
+						name: 'volunteerAttendances',
+						type: 'json',
+						default: '[]',
+						description: 'Example: [{"volunteerOpportunityId": &lt;integer&gt;, "volunteerOpportunityName": "&lt;string&gt;", "date": "&lt;string&gt;", "hours": "&lt;string&gt;"}]',
+						hint: 'Provide a JSON array of volunteer attendance objects.',
+					},
+				],
 			},
 			{
 				displayName: 'JSON Data',
@@ -527,10 +318,10 @@ export const contactTransactionCreateDescription = {
     "middleName": "<string>",
     "lastName": "<string>",
     "suffix": "<string>",
-		"birthMonth": "<string>",
-		"birthDay": "<string>",
-		"birthYear": "<string>",
-		"gender": "<string>",
+    "birthMonth": "<string>",
+    "birthDay": "<string>",
+    "birthYear": "<string>",
+    "gender": "<string>",
     "emailType": "<string>",
     "email": "<string>",
     "phoneType": "<string>",
@@ -557,27 +348,10 @@ export const contactTransactionCreateDescription = {
         "fieldName": "fieldValue",
         "fieldName2": "fieldValue2"
     },
-		"customObjects": [
+    "customObjects": [
         {
             "name": "<string>",
             "fields": [
-                {
-                    "name": "<string>",
-                    "value": "<string>"
-                },
-                {
-                    "name": "<string>",
-                    "value": "<string>"
-                }
-            ]
-        },
-        {
-            "name": "<string>",
-            "fields": [
-                {
-                    "name": "<string>",
-                    "value": "<string>"
-                },
                 {
                     "name": "<string>",
                     "value": "<string>"
@@ -586,12 +360,6 @@ export const contactTransactionCreateDescription = {
         }
     ],
     "volunteerAttendances": [
-        {
-            "volunteerOpportunityId": "<integer>",
-            "volunteerOpportunityName": "<string>",
-            "date": "<string>",
-            "hours": "<string>"
-        },
         {
             "volunteerOpportunityId": "<integer>",
             "volunteerOpportunityName": "<string>",
@@ -612,109 +380,6 @@ export const contactTransactionCreateDescription = {
 		] as INodeProperties[],
 	},
 
-	/**
-	 * Clean fields for API submission by removing empty, null, undefined, and default values
-	 * @param rawFields - Object containing all field values from the form
-	 * @returns Cleaned object with only meaningful values
-	 */
-	cleanFieldsForApi(rawFields: { [key: string]: any }): { [key: string]: any } {
-		const cleanedData: { [key: string]: any } = {};
-
-		// Define default values to exclude
-		const defaultValues: { [key: string]: any } = {
-			// JSON array fields with default empty arrays
-			emailLists: '[]',
-			customObjects: '[]',
-			volunteerAttendances: '[]',
-
-			// JSON object fields with default empty objects
-			customFields: '{}',
-
-			// Boolean fields with false defaults
-			invited: false,
-			rsvpResponse: false,
-			attended: false,
-
-			// Number fields with 0 defaults
-			eventId: 0,
-		};
-
-		// Helper function to check if value should be excluded
-		const shouldExclude = (key: string, value: any): boolean => {
-			// Exclude empty strings, null, undefined
-			if (value === '' || value === null || value === undefined) {
-				return true;
-			}
-
-			// Exclude default values
-			if (defaultValues.hasOwnProperty(key) && value === defaultValues[key]) {
-				return true;
-			}
-
-			// Exclude empty arrays
-			if (Array.isArray(value) && value.length === 0) {
-				return true;
-			}
-
-			// For JSON string fields that are empty arrays or objects
-			if (typeof value === 'string') {
-				try {
-					const parsed = JSON.parse(value);
-					if (
-						(Array.isArray(parsed) && parsed.length === 0) ||
-						(typeof parsed === 'object' && parsed !== null && Object.keys(parsed).length === 0)
-					) {
-						return true;
-					}
-				} catch (e) {
-					// Not JSON, continue with other checks
-				}
-			}
-
-			return false;
-		};
-
-		// Only include non-empty, non-default values
-		Object.entries(rawFields).forEach(([key, value]) => {
-			if (!shouldExclude(key, value)) {
-				// Handle special processing for certain fields
-				if (key === 'emailLists' || key === 'customObjects' || key === 'volunteerAttendances') {
-					// Parse JSON string fields that should be arrays
-					try {
-						const parsed = typeof value === 'string' ? JSON.parse(value) : value;
-						// Only include if it's a non-empty array
-						if (Array.isArray(parsed) && parsed.length > 0) {
-							cleanedData[key] = parsed;
-						}
-					} catch (e) {
-						// If parsing fails but it's not empty default, use original value
-						if (value && value !== '[]' && value !== '') {
-							cleanedData[key] = value;
-						}
-					}
-				} else if (key === 'customFields') {
-					// Handle custom fields JSON object
-					try {
-						const parsed = typeof value === 'string' ? JSON.parse(value) : value;
-						if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) {
-							cleanedData[key] = parsed;
-						}
-					} catch (e) {
-						// If parsing fails and it's not empty default, include it
-						if (value && value !== '{}' && value !== '[]' && value !== '') {
-							cleanedData[key] = value;
-						}
-					}
-				} else {
-					// Include the value as-is
-					cleanedData[key] = value;
-				}
-			}
-		});
-
-		return cleanedData;
-	},
-
 	async execute(this: IExecuteFunctions, itemIndex: number) {
 		const inputMethod = this.getNodeParameter('inputMethod', itemIndex) as string;
 		let bodyData: any;
@@ -727,44 +392,33 @@ export const contactTransactionCreateDescription = {
 				throw new NodeApiError(this.getNode(), error);
 			}
 		} else {
-			const rawFields = {
-				referenceSource: this.getNodeParameter('referenceSource', itemIndex),
-				referenceId: this.getNodeParameter('referenceId', itemIndex),
-				contactType: this.getNodeParameter('contactType', itemIndex),
-				name: this.getNodeParameter('name', itemIndex),
-				title: this.getNodeParameter('title', itemIndex),
-				firstName: this.getNodeParameter('firstName', itemIndex),
-				middleName: this.getNodeParameter('middleName', itemIndex),
-				lastName: this.getNodeParameter('lastName', itemIndex),
-				suffix: this.getNodeParameter('suffix', itemIndex),
-				birthMonth: this.getNodeParameter('birthMonth', itemIndex),
-				birthDay: this.getNodeParameter('birthDay', itemIndex),
-				birthYear: this.getNodeParameter('birthYear', itemIndex),
-				gender: this.getNodeParameter('gender', itemIndex),
-				emailType: this.getNodeParameter('emailType', itemIndex),
-				email: this.getNodeParameter('contactEmail', itemIndex),
-				phoneType: this.getNodeParameter('phoneType', itemIndex),
-				phone: this.getNodeParameter('phone', itemIndex),
-				address1: this.getNodeParameter('address1', itemIndex),
-				address2: this.getNodeParameter('address2', itemIndex),
-				city: this.getNodeParameter('city', itemIndex),
-				state: this.getNodeParameter('state', itemIndex),
-				postal: this.getNodeParameter('postal', itemIndex),
-				country: this.getNodeParameter('country', itemIndex),
-				eventId: this.getNodeParameter('eventId', itemIndex),
-				eventName: this.getNodeParameter('eventName', itemIndex),
-				invited: this.getNodeParameter('invited', itemIndex),
-				rsvpResponse: this.getNodeParameter('rsvpResponse', itemIndex),
-				attended: this.getNodeParameter('attended', itemIndex),
-				tags: this.getNodeParameter('tags', itemIndex),
-				originSegmentCode: this.getNodeParameter('originSegmentCode', itemIndex),
-				emailLists: this.getNodeParameter('emailLists', itemIndex),
-				customFields: this.getNodeParameter('customFields', itemIndex),
-				customObjects: this.getNodeParameter('customObjects', itemIndex),
-				volunteerAttendances: this.getNodeParameter('volunteerAttendances', itemIndex),
+			const firstName = this.getNodeParameter('firstName', itemIndex) as string;
+			const lastName = this.getNodeParameter('lastName', itemIndex) as string;
+			const additionalFields = this.getNodeParameter('additionalFields', itemIndex) as Record<string, any>;
+
+			// Parse JSON string fields
+			const jsonStringFields = ['emailLists', 'customFields', 'customObjects', 'volunteerAttendances'];
+			for (const field of jsonStringFields) {
+				if (additionalFields[field] !== undefined && typeof additionalFields[field] === 'string') {
+					try {
+						additionalFields[field] = JSON.parse(additionalFields[field]);
+					} catch (e) {
+						// leave as-is if parsing fails
+					}
+				}
+			}
+
+			// Rename contactEmail -> email to match API field name
+			if (additionalFields.contactEmail !== undefined) {
+				additionalFields.email = additionalFields.contactEmail;
+				delete additionalFields.contactEmail;
+			}
+
+			bodyData = {
+				firstName,
+				lastName,
+				...additionalFields,
 			};
-			// Clean up the payload using our helper method
-			bodyData = contactTransactionCreateDescription.cleanFieldsForApi(rawFields);
 		}
 
 		try {
