@@ -69,7 +69,8 @@ export const giftTransactionCreateDescription = {
 						inputMethod: ['fields'],
 					},
 				},
-				description: 'The type of the gift transaction. Examples: Cash, Check, Credit, EFT, NonCash, Stock, Other, ReversingTransaction, Cryptocoin, Pledge, PayPal.',
+				description:
+					'The type of the gift transaction. Examples: Cash, Check, Credit, EFT, NonCash, Stock, Other, ReversingTransaction, Cryptocoin, Pledge, PayPal.',
 			},
 			{
 				displayName: 'Gift Amount',
@@ -332,7 +333,8 @@ export const giftTransactionCreateDescription = {
 						name: 'contactTags',
 						type: 'string',
 						default: '',
-						description: 'The tags of the contact, separated by semicolons. Example: tag1;tag2;tag3; .',
+						description:
+							'The tags of the contact, separated by semicolons. Example: tag1;tag2;tag3; .',
 						hint: 'The tags of the contact',
 					},
 					{
@@ -377,7 +379,8 @@ export const giftTransactionCreateDescription = {
 						name: 'customObjects',
 						type: 'json',
 						default: '[]',
-						description: 'Example: [{"name": "&lt;string&gt;", "fields": [{"name": "&lt;string&gt;", "value": "&lt;string&gt;"}]}]',
+						description:
+							'Example: [{"name": "&lt;string&gt;", "fields": [{"name": "&lt;string&gt;", "value": "&lt;string&gt;"}]}]',
 						hint: 'Provide a JSON array of custom objects with their fields.',
 					},
 					{
@@ -454,7 +457,8 @@ export const giftTransactionCreateDescription = {
 						name: 'designations',
 						type: 'json',
 						default: '[]',
-						description: 'Example: [{"ID": 1, "name": "&lt;string&gt;", "code": "&lt;string&gt;", "amountDesignated": "&lt;string&gt;"}]',
+						description:
+							'Example: [{"ID": 1, "name": "&lt;string&gt;", "code": "&lt;string&gt;", "amountDesignated": "&lt;string&gt;"}]',
 						hint: 'Provide a JSON array of gift designation objects.',
 					},
 					{
@@ -477,7 +481,8 @@ export const giftTransactionCreateDescription = {
 						type: 'json',
 						default: '[]',
 						hint: 'Provide a JSON array of gift premium objects.',
-						description: 'Example: [{"ID": 1, "name": "&lt;string&gt;", "code": "&lt;string&gt;", "quantity": "&lt;string&gt;"}]',
+						description:
+							'Example: [{"ID": 1, "name": "&lt;string&gt;", "code": "&lt;string&gt;", "quantity": "&lt;string&gt;"}]',
 					},
 					{
 						displayName: 'Gift Segment',
@@ -1038,7 +1043,10 @@ export const giftTransactionCreateDescription = {
 			const contactLastName = this.getNodeParameter('contactLastName', itemIndex) as string;
 			const giftType = this.getNodeParameter('giftType', itemIndex) as string;
 			const giftAmount = this.getNodeParameter('giftAmount', itemIndex) as string;
-			const additionalFields = this.getNodeParameter('additionalFields', itemIndex) as Record<string, any>;
+			const additionalFields = this.getNodeParameter('additionalFields', itemIndex) as Record<
+				string,
+				any
+			>;
 
 			// --- Helper: extract fields from additionalFields by prefix/keys into a nested object ---
 			const extractFields = (fieldMap: Record<string, string>): Record<string, any> => {
@@ -1158,7 +1166,9 @@ export const giftTransactionCreateDescription = {
 			}
 
 			if (additionalFields.passthroughContactEmailLists !== undefined) {
-				passthroughContact.emailLists = parseJsonField(additionalFields.passthroughContactEmailLists);
+				passthroughContact.emailLists = parseJsonField(
+					additionalFields.passthroughContactEmailLists,
+				);
 			}
 
 			const eventAttendee = extractFields({

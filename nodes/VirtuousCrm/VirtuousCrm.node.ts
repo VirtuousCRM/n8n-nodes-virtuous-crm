@@ -1,9 +1,19 @@
-import { NodeConnectionType, NodeOperationError, type IExecuteFunctions, type INodeExecutionData, type INodeType, type INodeTypeDescription } from 'n8n-workflow';
+import {
+	NodeConnectionType,
+	NodeOperationError,
+	type IExecuteFunctions,
+	type INodeExecutionData,
+	type INodeType,
+	type INodeTypeDescription,
+} from 'n8n-workflow';
 import { ContactDescription } from './resources/contactTransaction';
 import { GiftDescription } from './resources/giftTransaction';
 import { ContactCollectionDescription } from './resources/contactCollection';
 import { ContactIndividualCollectionDescription } from './resources/contactIndividualCollection';
+import { ContactIndividualDescription } from './resources/contactIndividual';
 import { contactTransactionCreateDescription } from './resources/contactTransaction/create';
+import { contactGetByIdDescription } from './resources/contactTransaction/getById';
+import { contactGetByReferenceDescription } from './resources/contactTransaction/getByReference';
 import { giftTransactionCreateDescription } from './resources/giftTransaction/create';
 import { contactCollectionGetDescription } from './resources/contactCollection/get';
 import { contactCollectionCreateDescription } from './resources/contactCollection/create';
@@ -11,13 +21,19 @@ import { contactCollectionUpdateDescription } from './resources/contactCollectio
 import { contactIndividualCollectionGetDescription } from './resources/contactIndividualCollection/get';
 import { contactIndividualCollectionCreateDescription } from './resources/contactIndividualCollection/create';
 import { contactIndividualCollectionUpdateDescription } from './resources/contactIndividualCollection/update';
+import { contactIndividualGetByIdDescription } from './resources/contactIndividual/getById';
+import { contactIndividualGetByContactDescription } from './resources/contactIndividual/getByContact';
+import { contactIndividualFindByEmailDescription } from './resources/contactIndividual/findByEmail';
 
 export class VirtuousCrm implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'Virtuous CRM',
 		name: 'virtuousCrm',
 		subtitle: '={{ $parameter["operation"] + ": " + $parameter["resource"] }}',
-		icon: { light: 'file:../../icons/virtuous-logo-mark.svg', dark: 'file:../../icons/virtuous-logo-mark.svg' },
+		icon: {
+			light: 'file:../../icons/virtuous-logo-mark.svg',
+			dark: 'file:../../icons/virtuous-logo-mark.svg',
+		},
 		group: ['input'],
 		version: 1,
 		description: 'Interact with the Virtuous CRM API',
@@ -30,8 +46,8 @@ export class VirtuousCrm implements INodeType {
 		credentials: [
 			{
 				name: 'virtuousCrmApi',
-				required: true
-			}
+				required: true,
+			},
 		],
 		properties: [
 			{
@@ -41,11 +57,15 @@ export class VirtuousCrm implements INodeType {
 				options: [
 					{
 						name: 'Contact',
-						value: 'contact'
+						value: 'contact',
 					},
 					{
 						name: 'Contact Collection',
 						value: 'contactCollection',
+					},
+					{
+						name: 'Contact Individual',
+						value: 'contactIndividual',
 					},
 					{
 						name: 'Contact Individual Collection',
@@ -54,15 +74,16 @@ export class VirtuousCrm implements INodeType {
 					{
 						name: 'Gift',
 						value: 'gift',
-					}
+					},
 				],
 				noDataExpression: true,
 				default: 'contact',
 			},
 			...ContactDescription,
 			...ContactCollectionDescription,
+			...ContactIndividualDescription,
 			...ContactIndividualCollectionDescription,
-			...GiftDescription
+			...GiftDescription,
 		],
 	};
 
@@ -79,17 +100,36 @@ export class VirtuousCrm implements INodeType {
 
 				if (resource === 'contact' && operation === 'singleContactTransaction') {
 					result = await contactTransactionCreateDescription.execute.call(this, itemIndex);
+				} else if (resource === 'contact' && operation === 'getContactById') {
+					result = await contactGetByIdDescription.execute.call(this, itemIndex);
+				} else if (resource === 'contact' && operation === 'getContactByReference') {
+					result = await contactGetByReferenceDescription.execute.call(this, itemIndex);
+				} else if (resource === 'contactIndividual' && operation === 'getContactIndividualById') {
+					result = await contactIndividualGetByIdDescription.execute.call(this, itemIndex);
+				} else if (resource === 'contactIndividual' && operation === 'getIndividualsByContact') {
+					result = await contactIndividualGetByContactDescription.execute.call(this, itemIndex);
+				} else if (resource === 'contactIndividual' && operation === 'findIndividualByEmail') {
+					result = await contactIndividualFindByEmailDescription.execute.call(this, itemIndex);
 				} else if (resource === 'contactCollection' && operation === 'getContactCollections') {
 					result = await contactCollectionGetDescription.execute.call(this, itemIndex);
 				} else if (resource === 'contactCollection' && operation === 'createContactCollection') {
 					result = await contactCollectionCreateDescription.execute.call(this, itemIndex);
 				} else if (resource === 'contactCollection' && operation === 'updateContactCollection') {
 					result = await contactCollectionUpdateDescription.execute.call(this, itemIndex);
-				} else if (resource === 'contactIndividualCollection' && operation === 'getContactIndividualCollections') {
+				} else if (
+					resource === 'contactIndividualCollection' &&
+					operation === 'getContactIndividualCollections'
+				) {
 					result = await contactIndividualCollectionGetDescription.execute.call(this, itemIndex);
-				} else if (resource === 'contactIndividualCollection' && operation === 'createContactIndividualCollection') {
+				} else if (
+					resource === 'contactIndividualCollection' &&
+					operation === 'createContactIndividualCollection'
+				) {
 					result = await contactIndividualCollectionCreateDescription.execute.call(this, itemIndex);
-				} else if (resource === 'contactIndividualCollection' && operation === 'updateContactIndividualCollection') {
+				} else if (
+					resource === 'contactIndividualCollection' &&
+					operation === 'updateContactIndividualCollection'
+				) {
 					result = await contactIndividualCollectionUpdateDescription.execute.call(this, itemIndex);
 				} else if (resource === 'gift' && operation === 'singleGiftTransaction') {
 					result = await giftTransactionCreateDescription.execute.call(this, itemIndex);

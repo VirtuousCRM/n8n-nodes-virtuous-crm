@@ -147,7 +147,8 @@ export const contactTransactionCreateDescription = {
 						name: 'customObjects',
 						type: 'json',
 						default: '[]',
-						description: 'Example: [{"name": "&lt;string&gt;", "fields": [{"name": "&lt;string&gt;", "value": "&lt;string&gt;"}]}]',
+						description:
+							'Example: [{"name": "&lt;string&gt;", "fields": [{"name": "&lt;string&gt;", "value": "&lt;string&gt;"}]}]',
 						hint: 'Provide a JSON array of custom objects with their fields.',
 					},
 					{
@@ -299,7 +300,8 @@ export const contactTransactionCreateDescription = {
 						name: 'volunteerAttendances',
 						type: 'json',
 						default: '[]',
-						description: 'Example: [{"volunteerOpportunityId": &lt;integer&gt;, "volunteerOpportunityName": "&lt;string&gt;", "date": "&lt;string&gt;", "hours": "&lt;string&gt;"}]',
+						description:
+							'Example: [{"volunteerOpportunityId": &lt;integer&gt;, "volunteerOpportunityName": "&lt;string&gt;", "date": "&lt;string&gt;", "hours": "&lt;string&gt;"}]',
 						hint: 'Provide a JSON array of volunteer attendance objects.',
 					},
 				],
@@ -394,10 +396,18 @@ export const contactTransactionCreateDescription = {
 		} else {
 			const firstName = this.getNodeParameter('firstName', itemIndex) as string;
 			const lastName = this.getNodeParameter('lastName', itemIndex) as string;
-			const additionalFields = this.getNodeParameter('additionalFields', itemIndex) as Record<string, any>;
+			const additionalFields = this.getNodeParameter('additionalFields', itemIndex) as Record<
+				string,
+				any
+			>;
 
 			// Parse JSON string fields
-			const jsonStringFields = ['emailLists', 'customFields', 'customObjects', 'volunteerAttendances'];
+			const jsonStringFields = [
+				'emailLists',
+				'customFields',
+				'customObjects',
+				'volunteerAttendances',
+			];
 			for (const field of jsonStringFields) {
 				if (additionalFields[field] !== undefined && typeof additionalFields[field] === 'string') {
 					try {
