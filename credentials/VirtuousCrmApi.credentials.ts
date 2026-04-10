@@ -11,7 +11,10 @@ export class VirtuousCrmApi implements ICredentialType {
 
 	displayName = 'Virtuous CRM API';
 
-	icon: Icon = { light: 'file:../icons/virtuous-logo-mark.svg', dark: 'file:../icons/virtuous-logo-mark.svg' };
+	icon: Icon = {
+		light: 'file:../icons/virtuous-logo-mark.svg',
+		dark: 'file:../icons/virtuous-logo-mark.svg',
+	};
 
 	documentationUrl = 'https://docs.virtuoussoftware.com/#authentication';
 
@@ -23,7 +26,7 @@ export class VirtuousCrmApi implements ICredentialType {
 			typeOptions: { password: true },
 			default: '',
 			description: 'Your Virtuous CRM API Key',
-			required: true
+			required: true,
 		},
 	];
 

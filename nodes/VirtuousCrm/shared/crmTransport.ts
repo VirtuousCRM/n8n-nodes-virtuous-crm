@@ -8,6 +8,8 @@ import type {
 	IHttpRequestOptions,
 } from 'n8n-workflow';
 
+import { version } from '../../../package.json';
+
 export async function virtuousCrmApiRequest(
 	this: IHookFunctions | IExecuteFunctions | IExecuteSingleFunctions | ILoadOptionsFunctions,
 	method: IHttpRequestMethods,
@@ -17,12 +19,14 @@ export async function virtuousCrmApiRequest(
 ) {
 	const options: IHttpRequestOptions = {
 		method: method,
+		headers: {
+			'User-Agent': `n8n-nodes-virtuous-crm/${version}`,
+		},
 		qs,
 		body,
 		url: `https://api.virtuoussoftware.com${resource}`,
 		json: true,
 	};
-
 
 	return this.helpers.httpRequestWithAuthentication.call(this, 'virtuousCrmApi', options);
 }
