@@ -6,14 +6,14 @@ import {
 	type INodeType,
 	type INodeTypeDescription,
 } from 'n8n-workflow';
-import { ContactDescription } from './resources/contactTransaction';
+import { ContactDescription } from './resources/contact';
 import { GiftDescription } from './resources/giftTransaction';
 import { ContactCollectionDescription } from './resources/contactCollection';
 import { ContactIndividualCollectionDescription } from './resources/contactIndividualCollection';
 import { ContactIndividualDescription } from './resources/contactIndividual';
-import { contactTransactionCreateDescription } from './resources/contactTransaction/create';
-import { contactGetByIdDescription } from './resources/contactTransaction/getById';
-import { contactGetByReferenceDescription } from './resources/contactTransaction/getByReference';
+import { contactTransactionCreateDescription } from './resources/contact/create';
+import { contactGetByIdDescription } from './resources/contact/getById';
+import { contactGetByReferenceDescription } from './resources/contact/getByReference';
 import { giftTransactionCreateDescription } from './resources/giftTransaction/create';
 import { contactCollectionGetDescription } from './resources/contactCollection/get';
 import { contactCollectionCreateDescription } from './resources/contactCollection/create';
