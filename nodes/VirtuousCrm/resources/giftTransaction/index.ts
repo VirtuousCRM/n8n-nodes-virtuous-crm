@@ -10,7 +10,7 @@ export const GiftDescription: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				resource: ['gift'],
-			}
+			},
 		},
 		options: [
 			{
@@ -22,5 +22,5 @@ export const GiftDescription: INodeProperties[] = [
 		],
 		default: 'singleGiftTransaction',
 	},
-	...giftTransactionCreateDescription.description.properties
+	...giftTransactionCreateDescription.description.properties,
 ];
