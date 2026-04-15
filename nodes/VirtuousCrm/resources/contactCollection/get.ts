@@ -8,7 +8,7 @@ export const contactCollectionGetDescription = {
 
 	async execute(this: IExecuteFunctions, itemIndex: number) {
 		try {
-			const response = virtuousCrmApiRequest.call(
+			const response = await virtuousCrmApiRequest.call(
 				this,
 				'GET',
 				'/api/Contact/CustomCollections',

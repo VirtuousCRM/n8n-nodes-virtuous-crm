@@ -26,7 +26,7 @@ export const contactIndividualFindByEmailDescription = {
 		const email = this.getNodeParameter('email', itemIndex) as string;
 
 		try {
-			const response = virtuousCrmApiRequest.call(
+			const response = await virtuousCrmApiRequest.call(
 				this,
 				'GET',
 				'/api/ContactIndividual/Find',

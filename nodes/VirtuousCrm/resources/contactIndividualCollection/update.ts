@@ -122,7 +122,7 @@ export const contactIndividualCollectionUpdateDescription = {
 		}
 
 		try {
-			const response = virtuousCrmApiRequest.call(
+			const response = await virtuousCrmApiRequest.call(
 				this,
 				'PUT',
 				`/api/ContactIndividual/${contactIndividualId}/Collection/${collectionInstanceId}`,

@@ -1243,7 +1243,7 @@ export const giftTransactionCreateDescription = {
 		}
 
 		try {
-			const response = virtuousCrmApiRequest.call(
+			const response = await virtuousCrmApiRequest.call(
 				this,
 				'POST',
 				'/api/v2/Gift/Transaction',
