@@ -140,7 +140,7 @@ export const contactIndividualCollectionCreateDescription = {
 		}
 
 		try {
-			const response = virtuousCrmApiRequest.call(
+			const response = await virtuousCrmApiRequest.call(
 				this,
 				'POST',
 				`/api/ContactIndividual/${contactIndividualId}/Collection/${customCollectionId}`,

@@ -432,7 +432,7 @@ export const contactTransactionCreateDescription = {
 		}
 
 		try {
-			const response = virtuousCrmApiRequest.call(
+			const response = await virtuousCrmApiRequest.call(
 				this,
 				'POST',
 				'/api/Contact/Transaction',

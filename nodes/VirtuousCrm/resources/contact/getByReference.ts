@@ -40,7 +40,7 @@ export const contactGetByReferenceDescription = {
 		const referenceId = this.getNodeParameter('referenceId', itemIndex) as string;
 
 		try {
-			const response = virtuousCrmApiRequest.call(
+			const response = await virtuousCrmApiRequest.call(
 				this,
 				'GET',
 				`/api/Contact/${encodeURIComponent(referenceSource)}/${encodeURIComponent(referenceId)}`,

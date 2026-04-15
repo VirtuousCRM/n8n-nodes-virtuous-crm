@@ -1,6 +1,6 @@
 {
   "name": "@virtuoussoftware/n8n-nodes-virtuous-crm",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "A n8n node for the Virtuous CRM+ API",
   "keywords": [
     "api",

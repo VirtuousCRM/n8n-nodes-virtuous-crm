@@ -25,7 +25,7 @@ export const contactIndividualGetByContactDescription = {
 		const contactId = this.getNodeParameter('contactId', itemIndex) as number;
 
 		try {
-			const response = virtuousCrmApiRequest.call(
+			const response = await virtuousCrmApiRequest.call(
 				this,
 				'GET',
 				`/api/ContactIndividual/ByContact/${contactId}`,
